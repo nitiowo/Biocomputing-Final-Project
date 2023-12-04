@@ -5,17 +5,15 @@
   # can i have separate lines for space vs tab delimited
   # do i need to save the files with different names/how to name files
 
-# read in text file that is separated by spaces
-txtfile <- read.table("file.txt", sep = " ", header = TRUE)
-write.csv(txtfile, file = "file.csv", row.names = FALSE)
+txt_to_csv <- function(directory) {
+  for (files in list.files(path = directory, pattern = "*.txt")) {
+    file <- read.table(filename, header = TRUE, sep = " ")
+    csvout <- write.csv(file, file = "file.csv", row.names = FALSE)
+  }
+  }
 
-# set working directory
-setwd("countryX")
-for (file in list.files()) {
-  filename <- file
-  assign(filename, read.csv(file))
-  # write.table(file, sep = " ", col.names = TRUE, file = "file.txt")
-}
+# doesn't work because the function wants an input of filename but the for loop wants
+# an input of txt files. also, saving read.table as file isn't working
 
 #### compile data from all csv files into single file ----
 
