@@ -17,4 +17,18 @@ txt_to_csv <- function(directory) {
 
 #### compile data from all csv files into single file ----
 
+# add day of year column
+filename <- "countryX/screen_120.csv"
+screen_120.csv <- read.csv(filename)
+dayofyear <- strsplit(filename, "[^a-zA-Z0-9]")[[1]][3]
+screen_120.csv$dayofYear = dayofyear
+
+# add country column
+country_full <- strsplit(filename, "[^a-zA-Z0-9]")[[1]][1]
+country <- strsplit(country, "[a-z]")[[1]][8]
+screen_120.csv$country = country
+
+
+# compile <- function()
+
 #### summarize compiled data ----
