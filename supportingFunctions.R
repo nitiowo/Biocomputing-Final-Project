@@ -53,6 +53,8 @@ for (i in 1:length) {
 ##%% issues: how to return multiple variables in the function
 
 summary <- function(datafile) {
+  # load library for ggplot
+  # library(tidyverse)
   # read in data file
   datafile <- read.csv(datafile)
   ## number of screens run
@@ -69,6 +71,9 @@ summary <- function(datafile) {
   percentfemale <- femalerows / screensrun
   ## percent male
   percentmale <- (screensrun - femalerows) / screensrun
-  return(percentmale)
+  ## age distribution of patients
+  # create histogram with ages on the x axis and counts per age on y axis
+  ggplot(datafile, aes(x = age)) +
+    geom_histogram()
 }
 
