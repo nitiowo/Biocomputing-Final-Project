@@ -48,22 +48,24 @@ compileData <- function(countryPaths = countryPaths, countryList = countryList){
   allFiles <- data.frame(matrix(nrow=0,ncol=14)) #empty data frame with correct number of columns
   columns <- c("gender", "age", "marker01", "marker02", "marker03", "marker04", "marker05", "marker06", "marker07", "marker08", "marker09", "marker10", "country", "day") #column names
   colnames(allFiles) <- columns #assign the column names to the data frame
-  for(i in 1:length(countryPaths)){ #iterate through each country's directory
+  for(i in 1:length(countryPaths)){ #iterate through each country's directory (2)
     setwd(as.character(countryPaths[i])) #set working directory for the country
     fileList <- list.files() #generate a list of files for the directory
-    for(i in 1:length(fileList)){ #iterate through each file
-      currentFile <- read.csv(fileList[i], header = TRUE)
-      for(j in 1:nrow(currentFile)){ #iterate through each row of a given file
-        country <- countryList[i]
-        fileStrSplit <- strsplit(currentFile, "_") #get the day number from the file name
+    for(j in 1:length(fileList)){ #iterate through each file (56)
+      print(j)
+      currentFile <- read.csv(fileList[j], header = TRUE) #read the current file
+      for(k in 1:nrow(currentFile)){ #iterate through each row of a given file
+        country <- countryList[i] #get the country for each file
+        fileStrSplit <- strsplit(fileList[j], split = "_") #get the day number from the file name
         day <- fileStrSplit[2]
-        currentFileWithCountryDay <- cbind(currentFile[j],country,day) #create the row with country and day
-        allFiles <- rbind(allFiles,currentFileWithCountryDay) #we used cbind in class to bind columns, so use rbind here to bind rows
-        print(fileList[i])
+#        currentFileWithCountryDay <- cbind(currentFile[j], country, day) #create the row with country and day
+        readFile <- read.csv(fileList[j])
+        allFiles <- rbind(allFiles,readFile) #we used cbind in class to bind columns, so use rbind here to bind rows
       }
     }
   }
   #NA options: if/else if/else loop for the 3 cases
+  print(allFiles)
   return(allFiles) #return statement
 }
 
