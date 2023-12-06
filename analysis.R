@@ -91,7 +91,7 @@ ggplot(data = infection_rate, aes(x = dayofYear, y = infectionRate, color = coun
      color = "Country") +
   theme_bw()
 
-### Answer to Question 1: In "X" country tge dusease outbreaked begin.
+### Answer to Question 1: In "X" country the disease outbreak began.
 ### Because the infection rate in country "X" is always higher than that in country "Y" on each day.
 
 

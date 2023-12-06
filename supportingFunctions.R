@@ -67,19 +67,19 @@ Combined_CSV=function(directory1, directory2, directory3){
   #For loop to bind data if user chooses to do nothing with the NA
   if (Number_Chosen==3){
     All_Data_Both= rbind(All_DataX, All_DataY)
-    write.csv(All_Data_Both, file= "All_Data_Both.csv")
+    write.csv(All_Data_Both, file= "All_Data_Both.csv", row.names = FALSE)
   }
   #For loop to print a warning if the user chooses to
   if (Number_Chosen==2){
     All_Data_Both= rbind(All_DataX, All_DataY)
-    write.csv(All_Data_Both, file= "All_Data_Both.csv")
+    write.csv(All_Data_Both, file= "All_Data_Both.csv", row.names = FALSE)
     print("Warning: Rows with no data are present")
   }
   #For loop to remove the NA rows if the user chooses to
   if (Number_Chosen==1){
     All_Data_Both= rbind(All_DataX, All_DataY)
     All_Data_Both=na.omit(All_Data_Both)
-    write.csv(All_Data_Both, file= "All_Data_Both.csv")
+    write.csv(All_Data_Both, file= "All_Data_Both.csv", row.names = FALSE)
   }
 }
 
@@ -101,7 +101,7 @@ Data_Summary=function(file){
   #Count the Percentage screened that were infected
   total_infected=0
   for (i in 1:nrow(file)){
-    Marker_Sum=sum(file[i,4:13])
+    Marker_Sum=sum(file[i,3:12])
     if(Marker_Sum>=1){
       total_infected=total_infected+1
     }
