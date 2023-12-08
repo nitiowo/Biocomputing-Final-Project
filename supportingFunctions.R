@@ -57,12 +57,14 @@ Combined_CSV=function(directory1, directory2, directory3){
     All_DataY = rbind(All_DataY, Y)
   }
   All_Data_Both=rbind(All_DataX, All_DataY)
+  
   setwd(directory3)
   #Allow the user to decide what to do with NA rows
   print("What would you like to do with variables with NA in dataset?")
   print("Type 1 to remove NA rows")
   print("Type 2 to keep NA rows but display a warning")
   print("Type 3 to keep the rows with NA without warning")
+  
   Number_Chosen=readline(prompt= "Type Number: ")
   #For loop to bind data if user chooses to do nothing with the NA
   if (Number_Chosen==3){
@@ -119,40 +121,5 @@ Data_Summary=function(file){
   print(paste("The percentage of screens infected was", Percentage_Infected))
   print(Age_Distribution_Plot)
 }
-
-
-
-#Function that answers question 2
-#Create Data Frame with Data to answer question 2
-#Create a function that looks at the given file with all of the country data
-Vaccine_Question=function(file){
-  #Create a data frame that will hold the data for each country by marker, with
-  # a row for each marker in each country
-  Marker_Counts=data.frame(matrix(data=NA, nrow=20, ncol=3))
-  #Vector to be inserted as the column names in the data frame
-  vec1=c("Marker", "Count", "Country")
-  #Insert the vector as the column names
-  colnames(Marker_Counts)=vec1
-  #For loop to sum the patients in country X that were positive for each marker
-  for (i in 3:12){
-    Marker_Counts[i-2,2]=sum(file[which(file$country=="X"),i])
-  }
-  #For loop to sum the patients in country Y that were positive for each marker
-  for (i in 3:12){
-    Marker_Counts[i+8,2]=sum(file[which(file$country=="Y"),i])
-  }
-  #Insert a marker column with the labels for each
-  Marker_Counts[,1]=rep(colnames(file[,3:12,2]))
-  #Make the third row of the data frame have country X for the first 10 markers
-  Marker_Counts[1:10,3]="X"
-  #Make the third row of the data frame have country Y for the second set of 10 markers
-  Marker_Counts[11:20,3]="Y"
-  #Use GGplot to make a graph of the data frame
-  ggplot(data=Marker_Counts, aes(x=Marker, y=Count, fill=Country))+
-    geom_bar(stat="identity")+
-    ggtitle("Markers Found in Each Country")+
-    xlab("Marker Numbers")+ ylab("Number of Patients")+theme_classic()
-}
-
 
 

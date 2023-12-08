@@ -1,3 +1,4 @@
+# Introduction to Biocomputing Final Project
 # analysis.R
 # authors: Qiushi Peng, and Justin Detweiler
 
@@ -19,23 +20,21 @@ source("./supportingFunctions.R")
 TxtToCsv("./countryY")
 
 
-# go back to work directory
+### Step2: combine the data from CountryX and CountryY
+# allows the user to decide the purpose of the NA rows
+# (please run the following codes separately and pay attention to the prompt)
 setwd(work_directory)
-### Step2: combine the data from CountryX and CountryY 
 Combined_CSV(X_directory, Y_directory, work_directory)
 
 
 ### Step3: data summary
 setwd(work_directory)
 # read in data
-allData <- read.csv("./All_Data_Both.csv", header = TRUE)
+allData <- read.csv("./All_Data_Both.csv", header = TRUE) # if you get error here, please rerun the codes in Step2.
 Data_Summary(allData)
 
 
 ################################################################################
-
-### Function that answers question 2
-Vaccine_Question(allData)
 
 
 ##################
@@ -86,9 +85,10 @@ for (current_country in unique_countries) {
 ggplot(data = infection_rate, aes(x = dayofYear, y = infectionRate, color = country)) +
   geom_line() +
   labs(
-     x = "Day of Year",
-     y = "Infection Rate",
-     color = "Country") +
+    title = "Each country's infection rate according to day",
+    x = "Day of Year",
+    y = "Infection Rate",
+    color = "Country") +
   theme_bw()
 
 ### Answer to Question 1: In "X" country the disease outbreak began.
@@ -130,11 +130,14 @@ ggplot(data = marker_freq, aes(x = marker, y = frequency, fill = country)) +
   geom_col(position = position_dodge()) +
   theme_bw() +
   labs(
+    title = "Markers found in each country",
     x = "Marker",
     y = "Frequency",
     fill = "Country")
         
-### Answer to Question 2: It seems that it will not work for citizens of County.
-### Because we saw significant differences in frequency of each marker in the two countries.
+### Answer to Question 2: It seems that the vaccine developed in Country Y will 
+  # not work for citizens of Country X.
+### This assumption is made because we saw significant differences in frequency 
+  # of each marker in these two countries.
 
 
