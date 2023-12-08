@@ -40,9 +40,11 @@ setwd("C:/Users/Judith Lanahan/OneDrive/Desktop/Biocomputing/R/FinalProject/Bioc
 
 
 
+#### PAST THIS LINE IS FOR FUNCTION 2 AND WORKS
+
 ## second function practice stuff
 # get number of directories from user
-dirNum<-readline("How many directories?  ")
+dirNum<-as.integer(readline("How many directories?  "))
 # make a list whose length is the number of user inputed directories
 dirList<-numeric(dirNum)
 # loop through number of directories and prompt user to input the name of the directory for that iteration
@@ -55,30 +57,34 @@ dirList
 
 # make a for loop to get the files from the directory
 
+# establishes 
+country1<-dirList[1]
+files<-list.files(country1, pattern=".csv")
+getCols<-read.csv(paste(country1,"/",files[1], sep=''), header = TRUE)
+newCols<-c(colnames(getCols), "Country", "dayOfYear")
+allData<-data.frame(matrix(nrow=0, ncol=length(newCols)))
+colnames(allData)<-newCols
+
 for(i in 1:length(dirList)){
   countryElem<-dirList[i]
   files<-list.files(dirList[i], pattern=".csv")
-  dataList<-numeric(length(files))
+  getCols<-read.csv(paste(countryElem,"/",files[1], sep=''), header = TRUE)
+  newCols<-c(colnames(getCols), "Country", "dayOfYear")
+  currentData<-data.frame(matrix(nrow=0, ncol=length(newCols)))
+  colnames(currentData)<-newCols
   for(j in 1:length(files)){
     nameElem<-unlist(strsplit(files[j], "_"))
     dayElem<-unlist(strsplit(nameElem[2], split = "\\."))
     dayofYear<-dayElem[1]
-    df<-read.csv(files[j], header = TRUE)
+    df<-read.csv(paste(countryElem,"/",files[j], sep = ""), header = TRUE)
     for(z in 1:nrow(df)){
       df$Country[z]<-countryElem
-      df$dayOfYear[z]<-dayElem
+      df$dayOfYear[z]<-dayofYear
     }
-    dataList[j]<-df
+    currentData<-rbind(currentData, df)
   }
+  allData<-rbind(allData,currentData)
 }
-
-
-
-
-
-
-
-
 
 
 
