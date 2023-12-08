@@ -18,7 +18,8 @@ fileConverter<-function(workingDir){
 
 ### second function: getting all data into one csv
 
-bigCSV<-function(){
+bigCSV<-function(workingDir){
+  setwd(workingDir)
   # get number of directories from user
   dirNum<-as.integer(readline("How many directories?  "))
   # make a list whose length is the number of user inputed directories
