@@ -31,6 +31,8 @@ for(i in 1:5){
   write.csv(dfHolder, paste("countryY/",screenListY[i],".csv"), row.names = FALSE)
 }
 
-nameElements<-strsplit(screenListY[1],split="/.")
+nameElements<-strsplit(screenListY[1],split="\\.")
 nameElements
 paste("countryY/",screenListY[1],".csv", sep = "")
+
+
