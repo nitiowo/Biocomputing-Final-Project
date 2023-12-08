@@ -33,3 +33,8 @@ write.csv(marker_freq, "marker_freq_table.csv")
 pdf("marker_freq_heatmap.pdf", width = 5, height = 4)
 heatmap(as.matrix(marker_freq))
 dev.off()
+
+
+#1. The outbreak likely began in country X, since according to the barplot in the summary_plot.pdf, the earliest cases of this disease were detected in country X.
+
+#2. If country Y develops a vaccine for the disease, it is unlikely to work for citizens of country X, since according to the heatmap marker_freq_heatmap.pdf and marker_freq_table.csv, the microsatellite profiles (i.e. strains) in both countries are different.
