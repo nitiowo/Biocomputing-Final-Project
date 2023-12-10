@@ -3,6 +3,8 @@
 #Biocomputing Final Project
 #supportingFunctions portion
 
+#if person can come in with c/d/e country data could they use this
+
 #1ST REQUIREMENT
 #create a function that converts all files in
 #directory with space- or tab-delimited data (.txt)
