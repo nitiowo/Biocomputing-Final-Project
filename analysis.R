@@ -108,96 +108,167 @@ last_day = max(data$dayofYear)
 #days
 #so we know that for our analysis we will have a data frame that has a length of rows and length of columns based on the number of days of testing and the number of markers tested
 
+#To get the cumulative values for each column for each day I will first use the cumsum() function on each column and safe these newly created vectors with new vector names
+#Once I have created vectors of cumulated sums for each column in dfcx and dfcy I will combine them all together using cbind()
 
-
-mar1cum <- cumsum(dfcx$Marker_01_X)
-mar2cum <- cumsum(dfcx$Marker_02_X)
-mar3cum <- cumsum(dfcx$Marker_03_X)
-mar4cum <- cumsum(dfcx$Marker_04_X)
-mar5cum <- cumsum(dfcx$Marker_05_X)
-mar6cum <- cumsum(dfcx$Marker_06_X)
-mar7cum <- cumsum(dfcx$Marker_07_X)
-mar8cum <- cumsum(dfcx$Marker_08_X)
-mar9cum <- cumsum(dfcx$Marker_09_X)
-mar10cum <- cumsum(dfcx$Marker_10_X)
+#First processing everything for country X:
+mar1cumx <- cumsum(dfcx$Marker_01_X)
+mar2cumx <- cumsum(dfcx$Marker_02_X)
+mar3cumx <- cumsum(dfcx$Marker_03_X)
+mar4cumx <- cumsum(dfcx$Marker_04_X)
+mar5cumx <- cumsum(dfcx$Marker_05_X)
+mar6cumx <- cumsum(dfcx$Marker_06_X)
+mar7cumx <- cumsum(dfcx$Marker_07_X)
+mar8cumx <- cumsum(dfcx$Marker_08_X)
+mar9cumx <- cumsum(dfcx$Marker_09_X)
+mar10cumx <- cumsum(dfcx$Marker_10_X)
 
 #since each subject is positive in the data frame, in order to get the cumulative number of
 #positive subjects I will create a new column titled "cum_pos_subjects_X" and fill it with 1's
 #then I can apply "cumsum()" to that column
 
 subjcumx <- cumsum(rep(1,length(dfcx$Cumulative_Pos_X)))
-day_of_year <- dfcx$DayofYear_X
+day_of_yearx <- dfcx$DayofYear_X
 
 
-markercumulative <- cbind(mar1cum,mar2cum,mar3cum,mar4cum,mar5cum,mar6cum,mar7cum,mar8cum,mar9cum,mar10cum,subjcumx,day_of_year)
-head(markercumulative)
-tail(markercumulative)
+markercumulativex <- data.frame(cbind(mar1cumx,mar2cumx,mar3cumx,mar4cumx,mar5cumx,mar6cumx,mar7cumx,mar8cumx,mar9cumx,mar10cumx,subjcumx,day_of_yearx))
+head(markercumulativex)
+tail(markercumulativex)
 
-#using a for loop to go through each row and determine if the row is for country X or country Y
-#this will help determine what set of totals to add the total to
-for (j in length(data$"country")){
-  if (data[j,data$country[j]] == "X"){
-    xdata <- data$country[j]
-    }
-  else{
-    ydata <- data[j,]
+
+#Now processing everything for country Y:
+mar1cumy <- cumsum(dfcy$Marker_01_Y)
+mar2cumy <- cumsum(dfcy$Marker_02_Y)
+mar3cumy <- cumsum(dfcy$Marker_03_Y)
+mar4cumy <- cumsum(dfcy$Marker_04_Y)
+mar5cumy <- cumsum(dfcy$Marker_05_Y)
+mar6cumy <- cumsum(dfcy$Marker_06_Y)
+mar7cumy <- cumsum(dfcy$Marker_07_Y)
+mar8cumy <- cumsum(dfcy$Marker_08_Y)
+mar9cumy <- cumsum(dfcy$Marker_09_Y)
+mar10cumy <- cumsum(dfcy$Marker_10_Y)
+
+#since each subject is positive in the data frame, in order to get the cumulative number of
+#positive subjects I will create a new column titled "cum_pos_subjects_X" and fill it with 1's
+#then I can apply "cumsum()" to that column
+
+subjcumy <- cumsum(rep(1,length(dfcy$Cumulative_Pos_Y)))
+day_of_yeary <- dfcy$DayofYear_Y
+
+
+markercumulativey <- data.frame(cbind(mar1cumy,mar2cumy,mar3cumy,mar4cumy,mar5cumy,mar6cumy,mar7cumy,mar8cumy,mar9cumy,mar10cumy,subjcumy,day_of_yeary))
+head(markercumulativey)
+tail(markercumulativey)
+
+
+#Now I need to obtain the last row for each day in the dataframe "markercumulativex" and "markercumulativey"
+#"x_totals_by_day" will be the data frame that will contain a day by day cumulative total for all markers, and for positive subjects for country x,
+#"y_totals_by_day" will be the data frame for country y
+#I'll check each row and if day_of_yearx increments, I'll save the i-1 row to the new dataframe
+#If day_of_yearx increments by more than one I will need to print the i-1 row to the new dataframe
+
+
+
+x_totals_by_day <- data.frame("Marker_01_X" = integer(), "Marker_02_X" = integer(), "Marker_03_X" = integer(), "Marker_04_X" = integer(), "Marker_05_X" = integer(), "Marker_06_X" = integer(), "Marker_07_X" = integer(), "Marker_08_X" = integer(), "Marker_09_X" = integer(), "Marker_10_X" = integer(), "Cumulative_Pos_X" = integer(), "DayofYear_X" = integer(), stringsAsFactors = FALSE)
+#go from 120-175
+#check if it is in day_of_yearx
+#or go through each row
+#using dayxcurr and dayxprev to know when the day increments. I will then save the row before the increment.
+#if increment is >1 then I will save the row before the increment however many times the distance between the two was.
+#initial state is set to the first day in "dataset" and all other columns are set to 0 in case there were no cases on the first day of data collection for either of the countries
+dayxcurr = data$dayofYear[1]
+dayxprev = data$dayofYear[1]
+#this will be the initial vector that can be used if there were no positive cases on day 1
+#it can be used for both country x and y
+initvec <- c(rep(0, 11),first_day)
+
+
+#for loop will go through each row in markercumulativex
+#dayxcurr will be initially saved as whatever the day of the year is for the current row in the loop
+#in this case I need to save the row from the previous loop (or as all zeros other than the day if it was the first time through the loop)
+#I need to determine how many days were skipped to know how many rows to make
+#if not the first time through, then it will take the previous days values and paste them on the next row, since those values should be the same if there were no positive cases for the following day
+
+for (i in 1:length(markercumulativex$day_of_year)){
+  if (i == 1){
+    dayxprev = data$dayofYear[1]
   }
-}
-head(xdata)
-head(ydata)
-
-
-
-
-tail(data)
-head(data)
-#to make the code flexible I will have to create a way to change the number of rows in new output column
-for (j in 1:100){
-  if (data$"11"[j] == "X"){
-    for (i in 1:10){
-      if (data[j,i] == 1){
-        #from here we know that column i corresponds to x and has a positive marker that corresponds to the i marker
-        #append this data onto the new marker name that is "marker" + i
-        print("Yes")
-        
+  else{
+    dayxprev = markercumulativex$day_of_yearx[i-1]
+  }
+  dayxcurr = markercumulativex$day_of_yearx[i]
+  if (dayxcurr != dayxprev){
+    diff = dayxcurr - dayxprev
+    if (i == 1){
+      for (j in 1:diff){
+        x_totals_by_day[nrow(x_totals_by_day)+1,] <- c(rep(0, 11),(first_day + j - 1))
       }
     }
-    if (data[j,i]<1){
-      print("positive")
-    }
     else{
-      print("Negative")
+      for (j in 1:diff){
+        x_totals_by_day[nrow(x_totals_by_day)+1,] <- markercumulativex[i-1,]
+      }
     }
   }
-  else{
-    print("0")
+  if (i == length(markercumulativex$day_of_year)){
+    x_totals_by_day[nrow(x_totals_by_day)+1,] <- tail(markercumulativex,1)
   }
 }
 
-#need the plus 1 since day 120 will be day 0 and day 175 will be day 55
-
-#I want to repdroduce a data frame similar to data. however it will not include gender and age
-#First column will consist of the day of year, second column will cosist of the country, third column will consist of the running total of people from that country that are positive, and remaining columns
-#will consist of running total of positive markers for each country
-
-#create running total not only for each country that has positive people
-#but also running totals for each countrys marker positives
 
 
 
+y_totals_by_day <- data.frame("Marker_01_Y" = integer(), "Marker_02_Y" = integer(), "Marker_03_Y" = integer(), "Marker_04_Y" = integer(), "Marker_05_Y" = integer(), "Marker_06_Y" = integer(), "Marker_07_Y" = integer(), "Marker_08_Y" = integer(), "Marker_09_Y" = integer(), "Marker_10_Y" = integer(), "Cumulative_Pos_Y" = integer(), "DayofYear_Y" = integer(), stringsAsFactors = FALSE)
 
 
-#make vector that is column 3-12 for each row
-#write value of each subset 
-#write it to a specific row, column will always be the same, but the row will be different
-#write it to row corresponding to dayofYear row
+#go from 120-175
+#check if it is in day_of_yeary
+#or go through each row
+#using dayycurr and dayyprev to know when the day increments. I will then save the row before the increment.
+#if increment is >1 then I will save the row before the increment however many times the distance between the two was.
+#initial state is set to the first day in "dataset" and all other columns are set to 0 in case there were no cases on the first day of data collection for either of the countries
+dayycurr = data$dayofYear[1]
+dayyprev = data$dayofYear[1]
 
-#if data$country == x, data#marker01 == 1 and data#country == x increment marker01x by 1
+#for loop will go through each row in markercumulativey
+#dayycurr will be initially saved as whatever the day of the year is for the current row in the loop
+#in this case I need to save the row from the previous loop (or as all zeros other than the day if it was the first time through the loop)
+#I need to determine how many days were skipped to know how many rows to make
+#if not the first time through, then it will take the previous days values and paste them on the next row, since those values should be the same if there were no positive cases for the following day
 
-#so our new data frame will have length(days) number of rows and 13 columns, 1 column for the dayofYear, 1 column for country X cumulative total positive cases, 1 column for country Y cumulative total
-#positive cases
-#each time through the loop it will check if a marker was positive, if there was a positive marker it will check if country x or country y was listed, and
-#depending on the country it will increment positive cases for that country
+for (i in 1:length(markercumulativey$day_of_year)){
+  if (i == 1){
+    dayyprev = data$dayofYear[1]
+  }
+  else{
+    dayyprev = markercumulativey$day_of_yeary[i-1]
+  }
+  dayycurr = markercumulativey$day_of_yeary[i]
+  if (dayycurr != dayyprev){
+    diff = dayycurr - dayyprev
+    if (i == 1){
+      for (j in 1:diff){
+        y_totals_by_day[nrow(y_totals_by_day)+1,] <- c(rep(0, 11),(first_day + j - 1))
+      }
+    }
+    else{
+      for (j in 1:diff){
+        y_totals_by_day[nrow(y_totals_by_day)+1,] <- markercumulativey[i-1,]
+      }
+    }
+  }
+  if (i == length(markercumulativey$day_of_year)){
+    y_totals_by_day[nrow(y_totals_by_day)+1,] <- tail(markercumulativey,1)
+  }
+}
+
+#If there is a gap in day_of_yearx somewhere from 120-175 I need to insert a row in using data from previous row so that there are no gaps in days and so both country x and country y have the same nubmer of rows
+tail(x_totals_by_day)
+tail(y_totals_by_day)
+head(x_totals_by_day)
+head(y_totals_by_day)
+
+
 
 
 #there will also be 20 variables created: each of the 10 markers will have a running total for each country
@@ -207,21 +278,11 @@ for (j in 1:100){
 #It may be most efficient to do this with a separate loop, one that ignores dayofYear column and just looks at country column
 #each iteration copies row with country X to 
 
-#create a new data frame with the below headings and create empty vectors for each column using the length of Day_of_Year vector
-Positive_Cases<-data.frame("Day_of_Year" = numeric(length(data$dayofYear)), "X" = numeric(length(data$dayofYear)), "country_x_pos_cases" = numeric(length(data$dayofYear)),"country_x_pos_cases" = numeric(length(data$dayofYear)), stringsAsFactors = FALSE)
-head(Positive_Cases)
 
-#create a variable that can be added to for each country number of cases and that can be incremented
-countryxprev = 0
-countryxcurr = 0
 
-countryyprev = 0
-countryycurr = 0
-#create a loop that checks each row in "data" and accumulates positive cases for the correct country for the correct day
-#the accumulated cases are added to the correct column and row each time the loop increments
 #also will need to get an average value for the markers for each country
 #probably best to display that with ten couples of bar plots to see how similar those numbers are
-#if case is has a positive marker then check country, if country x, then add to each marker and the number of people that are positive
+
 #strsplit(x,"_")
 #split function up into functions
 #get a list back, first element is first part with vector of first part
@@ -234,31 +295,8 @@ countryycurr = 0
 #this should show that one country had more cases than the other country first
 #this should indicate what country had the disease first
 
-data
-head(data)
-for(j in 1:length(data$dayofYear)){
-  if(data$country[j] == "X"){
-    countryxprev = data[j,1]
-    countryxcurr = countryxprev + countryxcurr
-    #need to determine if row was a positive person, and if so add a value to 1 to runnning total
-    
-    data$pos_cases[j,1] = uwcurr
-    scores[j,2] = msucurr
-    scores[j,1] = data[j,1]
-  } else{
-    msuprev = data[j,3]
-    msucurr = msuprev + msucurr
-    scores[j,2] = msucurr
-    scores[j,3] = uwcurr
-    scores[j,1] = data[j,1]
-  }}
 
-#create a row of zeroes at the top so that there is a starting time of zero and starting scores of zero
-#scores<-rbind(0,scores)
-#finally print the data frame "scores" to make sure everything looks correct
-scores
-
-
+#scores<-rbind(0,scores) - to get a row of 0s
 
 #for graph dayofYear is going to be x-axis and number of positive cases is
 #going to be y-axis
