@@ -42,9 +42,10 @@ commaTabtoCSV <- function(punctuation,file){
   #e. Add the two new columns of data for each row (using strsplit() for the date)
   #Reference the final challenge of lecture 26 for this step
 
-countryPaths <- list("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/countryX","C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/countryY") #list of directory paths
-countryList <- list("X","Y")
+countryPaths <- list("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/countryX") #list of directory paths
+countryList <- list("X")
 compileData <- function(countryPaths = countryPaths, countryList = countryList){ #function
+  output.csv <- data.frame()
   allFiles <- data.frame(matrix(nrow=0,ncol=14)) #empty data frame with correct number of columns
   columns <- c("gender", "age", "marker01", "marker02", "marker03", "marker04", "marker05", "marker06", "marker07", "marker08", "marker09", "marker10", "country", "day") #column names
   colnames(allFiles) <- columns #assign the column names to the data frame
@@ -52,25 +53,28 @@ compileData <- function(countryPaths = countryPaths, countryList = countryList){
     setwd(as.character(countryPaths[i])) #set working directory for the country
     fileList <- list.files() #generate a list of files for the directory
     for(j in 1:length(fileList)){ #iterate through each file (56)
-      print(j)
       currentFile <- read.csv(fileList[j], header = TRUE) #read the current file
-      for(k in 1:nrow(currentFile)){ #iterate through each row of a given file
-        country <- countryList[i] #get the country for each file
-        fileStrSplit <- strsplit(fileList[j], split = "_") #get the day number from the file name
-        day <- fileStrSplit[2]
-#        currentFileWithCountryDay <- cbind(currentFile[j], country, day) #create the row with country and day
-        readFile <- read.csv(fileList[j])
-        allFiles <- rbind(allFiles,readFile) #we used cbind in class to bind columns, so use rbind here to bind rows
+      country <- as.character(countryList[i]) #get the country for each file
+      countryColumn <- rep(x = country, nrow(currentFile)) #make a vector with the length of the number of rows in the file with the country name
+      fileStrSplit <- strsplit(fileList[j], split = "_") #get the day number from the file name
+      fileStrSplitChar <- fileStrSplit[[1]][2]
+      dayStrSplit <- strsplit(fileStrSplitChar, split = "[.]") #split the number.csv into the number and csv; use an escape character for . as split
+      day <- as.numeric(dayStrSplit[[1]][1]) #get the day from the split of the number.csv      dayColumn <- rep(x = day, nrow(currentFile)) #make a vector with the length of the number of rows in the file with the day
+      dayColumn <- rep(x = day, nrow(currentFile)) #make a vector with the length of the number of rows in the file with the day
+      currentFile$day <- dayColumn #create the row with country and day
+      currentFile$country <- countryColumn #create the row with country and day
+      print(currentFile)
+      if(i*j == 1){
+        write.table(currentFile, file = "output.csv", sep = ",", col.names = NA, row.names = TRUE) #append = TRUE is not needed
+      }else{
+        write.table(currentFile, file = "output.csv", append = TRUE, sep = ",", col.names = NA, row.names = TRUE) #append = TRUE is needed
       }
     }
   }
   #NA options: if/else if/else loop for the 3 cases
-  print(allFiles)
-  return(allFiles) #return statement
+  #Use !is.na() or na.rm in sums to remove the NA value (give different answers)
+  return(output.csv) #return statement
+  print(output.csv)
 }
 
-#Write a function to summarize the compiled data in terms of the number of screens run,
- #the percent of patients screened that were infected, the percent of patients that
- #identify as male and female, and the age distribution of patients (as a table or plot).
- #Remember that they provide a file with the data compiled (allData.csv), so that this 
- #task is not dependent on completion of the other tasks.
+compileData(countryPaths, countryList)
