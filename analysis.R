@@ -20,13 +20,6 @@ countryList <- list("X","Y") #list of country names
 countryPunctuation <- list("comma","space") #list of the delimiter for each country's files
 
 #Convert Country Y from space to comma
-
-#setwd()
-#fileList
-#for(file in file_list){
-  #commaTabtoCSV(file)
-#}
-
 csvFileList <- list()
 for(i in 1:length(countryPaths)){ #iterate through each country's directory (2)
   setwd(as.character(countryPaths[i])) #set working directory for the country
