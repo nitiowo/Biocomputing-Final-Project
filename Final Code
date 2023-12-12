@@ -1,0 +1,62 @@
+#1 SupportingFunctions.R
+#a Function to convert Delimited files to CSV
+convertToCSV <- function(directory) {
+  files <- list.files(directory, pattern="\\.txt$", full.names=TRUE)
+  for (file in files) {
+    data <- read.table(file, header=TRUE, sep="", fill=TRUE, check.names=TRUE)
+    csvName <- sub("\\.txt$", ".csv", file)
+    write.csv(data, csvName, row.names=FALSE)
+  }
+}
+#b Function to compile CSV files into a single file
+compileCSV <- function(directory, removeNA=FALSE, warnNA=TRUE) {
+  files <- list.files(directory, pattern="\\.csv$", full.names=TRUE)
+  compiledData <- NULL
+  for (file in files) {
+    data <- read.csv(file)
+    if (removeNA) {
+      data <- na.omit(data)
+    } else if (warnNA && any(is.na(data))) {
+      warning("NA values found in file: ", file)
+    }
+    compiledData <- rbind(compiledData, data)
+  }
+  write.csv(compiledData, file.path(directory, "compiled_data.csv"), row.names=FALSE)
+}
+#c Function to summarize Data
+summarizeData <- function(data) {
+  totalScreens <- nrow(data)
+  infectedRate <- mean(data$infected, na.rm=TRUE)
+  genderDistribution <- table(data$gender) / totalScreens
+  ageDistribution <- hist(data$age, plot=FALSE)
+  list(totalScreens=totalScreens, infectedRate=infectedRate, 
+       genderDistribution=genderDistribution, ageDistribution=ageDistribution)
+}
+#2 analysis.R
+#I will use my supportingFunctions.R to analyze the data
+# Load supporting functions
+source("supportingFunctions.R")
+
+# Convert delimited files to CSV
+convertToCSV("path/to/delimited/files")
+
+# Compile CSV files into a single file
+compileCSV("path/to/csv/files", removeNA=TRUE)
+
+# Read compiled data
+compiledData <- read.csv("path/to/csv/files/compiled_data.csv")
+
+# Summarize the data
+summary <- summarizeData(compiledData)
+
+# Graphical Evidence
+# Plot age distribution
+hist(compiledData$age, main="Age Distribution", xlab="Age", ylab="Frequency")
+
+# Plotting gender distribution
+barplot(summary$genderDistribution, main="Gender Distribution", 
+        xlab="Gender", ylab="Proportion")
+
+# The age distribution histogram helps understand the spread of ages in the dataset
+# The gender distribution barplot shows the proportion of males and females in the dataset
+# Stephan Lukashev
