@@ -75,3 +75,30 @@ combinecsv <- function(countryY_path='C:/Users/cdmix/Desktop/Biocomputing/Biocom
   }
 }
 combinecsv()
+
+#working directory MUST contain the allData.csv file
+setwd('C:/Users/cdmix/Desktop/Biocomputing/Biocomputing-Final-Project')
+summ <- function(data='allData.csv') {
+  dat <- read.csv(data, header=TRUE)
+  screen <- nrow(dat)
+  cat('number of screens ran = ', screen, '\n')
+  #column named "gender" in data
+  cat('percent female = ', sum(dat$gender=='female')/nrow(dat), '\n')
+  cat('percent male = ', sum(dat$gender=='male')/nrow(dat), '\n')
+  #markers will always be located in col 3-12
+  infected <- 0
+  for (i in 1:nrow(dat)){
+    if (sum(dat[i,3:12]) >=1){
+      infected <- infected + 1
+    }else{
+      infected <- infected
+    }
+  }
+  cat('percent infected =', (infected)/screen, '\n')
+  #plot for distribution of gender and age
+  library(ggplot2)
+  ggplot(dat,aes(gender,age))+geom_violin()
+  #table that shows distribution of gender and age
+  return(table(dat$gender, dat$age))
+}
+summ()
