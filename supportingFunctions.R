@@ -13,48 +13,23 @@ txt_to_csv <- function(directory) {
   }
   }
 
-# doesn't work because the function wants an input of filename but the for loop wants
-# an input of txt files. also, saving read.table as file isn't working
 
 #### compile data from all csv files into single file ----
 
-# dataframe <- cbind(lapply(files, read.csv))
-dataframe <- bind_rows(lapply(files, read.csv))
-
-step1 <- lapply(files, read.csv)
-step2 <- lapply(step1, strsplit(step1, split = "[^a-zA-Z0-9]"))
-
-# add day of year column
-filename <- "countryX/screen_120.csv"
-screen_120.csv <- read.csv(filename)
-dayofyear <- strsplit(filename, "[^a-zA-Z0-9]")[[1]][3]
-screen_120.csv$dayofYear = dayofyear
-
-# add country column
-country_full <- strsplit(filename, "[^a-zA-Z0-9]")[[1]][1]
-country <- strsplit(country, "[a-z]")[[1]][8]
-screen_120.csv$country = country
-
-# make a for loop to add columns to each csv file
-filelist <- list.files()
-length <- length(filelist)
-for (i in 1:length) {
-  print(i)
-  # create the name of each file as the file name according to the iteration i
-  name <- filelist[i] 
-  # use read.csv on the file for iteration i and name it the according name
-  assign(name, read.csv(as.character(filelist[i])))
-  ## add day of year column
-  dayofYear <- strsplit(as.character(filelist[i]), "[^a-zA-Z0-9]")[[1]][2]
-  ######### this doesn't work
-  # use some sort of function that creates a column?
-  # name$dayofYear = dayofyear
-  ## add country column
-  country <- "X"
+compile <- function(directory) {
+  compileddata <- data.frame()
+  for (file in list.files(path = directory, pattern = "*.csv")) {
+    path <- paste(directory, file, sep = "/")
+    dataset <- read.csv(path)
+    dayofyear <- strsplit(file, "[^a-zA-Z0-9]")[[1]][2]
+    dataset$dayofYear = dayofyear
+    country <- strsplit(path, "[^A-Z]")[[1]][8]
+    dataset$country = country
+    compileddata <- rbind(dataset, compileddata)
+    write.csv(compileddata, file = "compileddata.csv", row.names = FALSE)
+  }
 }
 
-
-# compile <- function()
 
 #### summarize compiled data ----
 ##%% issues: how to return multiple variables in the function
