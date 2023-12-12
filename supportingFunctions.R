@@ -1,14 +1,15 @@
 #### convert txt to csv ----
 
-## note: example files are called file.txt and file.csv
 #### things i'm not sure about
   # can i have separate lines for space vs tab delimited
-  # do i need to save the files with different names/how to name files
 
 txt_to_csv <- function(directory) {
-  for (files in list.files(path = directory, pattern = "*.txt")) {
-    file <- read.table(filename, header = TRUE, sep = " ")
-    csvout <- write.csv(file, file = "file.csv", row.names = FALSE)
+  for (file in list.files(path = directory, pattern = "*.txt")) {
+    path <- paste(directory, file, sep = "/")
+    dataset <- read.table(path, header = TRUE, sep = " ")
+    name <- paste(file, ".csv", sep = "")
+    path_new <- paste(directory, name, sep = "/")
+    write.csv(dataset, file = path_new, row.names = FALSE)
   }
   }
 
@@ -16,6 +17,12 @@ txt_to_csv <- function(directory) {
 # an input of txt files. also, saving read.table as file isn't working
 
 #### compile data from all csv files into single file ----
+
+# dataframe <- cbind(lapply(files, read.csv))
+dataframe <- bind_rows(lapply(files, read.csv))
+
+step1 <- lapply(files, read.csv)
+step2 <- lapply(step1, strsplit(step1, split = "[^a-zA-Z0-9]"))
 
 # add day of year column
 filename <- "countryX/screen_120.csv"
@@ -34,7 +41,7 @@ length <- length(filelist)
 for (i in 1:length) {
   print(i)
   # create the name of each file as the file name according to the iteration i
-  name <- as.character(filelist[i])
+  name <- filelist[i] 
   # use read.csv on the file for iteration i and name it the according name
   assign(name, read.csv(as.character(filelist[i])))
   ## add day of year column
@@ -76,4 +83,3 @@ summary <- function(datafile) {
   ggplot(datafile, aes(x = age)) +
     geom_histogram()
 }
-
