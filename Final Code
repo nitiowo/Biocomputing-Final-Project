@@ -1,4 +1,6 @@
 #1 SupportingFunctions.R
+
+
 #a Function to convert Delimited files to CSV
 convertToCSV <- function(directory) {
   files <- list.files(directory, pattern="\\.txt$", full.names=TRUE)
@@ -32,7 +34,22 @@ summarizeData <- function(data) {
   list(totalScreens=totalScreens, infectedRate=infectedRate, 
        genderDistribution=genderDistribution, ageDistribution=ageDistribution)
 }
+#d Function to analyze Genetic Markers
+analyzeGeneticMarkers <- function(data) {
+  data$infected <- rowSums(data[, c("marker1", "marker2", ..., "marker10")]) > 0
+  return(data)
+}
+
+#e Function to summarize marker Data
+summarizeMarkers <- function(data) {
+  countrySummary <- aggregate(. ~ country, data, function(x) mean(x, na.rm = TRUE))
+  return(countrySummary)
+}
+
+
 #2 analysis.R
+
+
 #I will use my supportingFunctions.R to analyze the data
 # Load supporting functions
 source("supportingFunctions.R")
@@ -50,13 +67,35 @@ compiledData <- read.csv("path/to/csv/files/compiled_data.csv")
 summary <- summarizeData(compiledData)
 
 # Graphical Evidence
-# Plot age distribution
-hist(compiledData$age, main="Age Distribution", xlab="Age", ylab="Frequency")
 
-# Plotting gender distribution
-barplot(summary$genderDistribution, main="Gender Distribution", 
-        xlab="Gender", ylab="Proportion")
+# Question 1
+# Line graph of infections over time for each country
 
-# The age distribution histogram helps understand the spread of ages in the dataset
-# The gender distribution barplot shows the proportion of males and females in the dataset
+# Aggregate data by country and day of year
+infectionsByDay <- aggregate(infected ~ country + dayOfYear, data=compiledData, sum)
+
+# Plotting
+library(ggplot2)
+ggplot(infectionsByDay, aes(x=dayOfYear, y=infected, color=country, group=country)) +
+  geom_line() +
+  labs(title="Infections Over Time by Country", x="Day of Year", y="Number of Infections") +
+  theme_classic()
+
+# Answer to the question once code is ran
+
+# Question 2
+#Bar Pots for Frequences of each Marker
+
+# Prepare data for plotting
+markers <- compiledData[, c("country", "marker1", "marker2", ..., "marker10")]
+markersMelted <- reshape2::melt(markers, id.vars = "country")
+
+# Plotting
+ggplot(markersMelted, aes(x=variable, y=value, fill=country)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  labs(title="Frequency of Each Marker by Country", x="Marker", y="Frequency") +
+  theme_classic()
+
+# Answer to question when plotted 
+
 # Stephan Lukashev
