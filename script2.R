@@ -1,5 +1,6 @@
 ### second try
 
+setwd("C:/Users/evelasco/Desktop/Biocomputing-Final-Project-main")
 
 # this function converts all the .txt files in a directory into .csv files
 # usage: fileConverter(workingDir)
@@ -98,9 +99,41 @@ bigCSV<-function(workingDir){
     #### and allData combines the two+ countries?
     
     
-    # combine all the combined dataframes for all coutnries
+    # combine all the combined dataframes for all countries
     allData<-rbind(allData,currentData)
+  }
+  
+  # find out what user wants
+  findNA<-readline(prompt = "Would you like to remove rows containing N/As? y/n: ")
+  
+  #in the event that user wants to get rid of NA rows
+  if(findNA == "y"){
+    allData2<-na.omit(allData)
+    return(allData2)
+    
+  }else if(findNA == "n"){
+    
+    
+    #if they would like to be warned...
+    warnNA<-readline(prompt = "Would you like to be warned of N/As? y/n: ")
+    if(warnNA == "y"){
+      NAtest<-sum(is.na(allData))
+      if(NAtest>0){
+        print("Warning: NAs present in data")
+      }
+      # in the event that the user is satisfied with unclean data
+    }else if(warnNA=="n"){
+      print("I shall give you the unclean CSV")
+    }
+    
+    # in the event that the user types in something weird instead of y or n
+    #default is unclean CSV
+  }else{
+    print("Input not understood. Creating csv with N/As")
   }
   
 }
 
+
+newData<-df[df$dayOfYear==120,]
+sum(newData[,3:12])
