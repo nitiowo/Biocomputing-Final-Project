@@ -106,7 +106,7 @@ for(i in 1:nrow(marker_columns_X)){
   }
 }
 
-# find percent infected for country Y
+# find percent infected for country X
 percentinfectedX <- (infected_X/count_X)*100
 percentinfectedX
 
@@ -158,9 +158,13 @@ combined_df <- rbind(df_X, df_Y)
 long_df <- melt(combined_df, id.vars = c("marker", "country"))
 
 # Plot the data
-ggplot(long_df, aes(x = marker, y = value, fill = country)) +
+markerGraph<-ggplot(long_df, aes(x = marker, y = value, fill = country)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   xlab("Marker")+
   ylab("Count")+
   ggtitle("Comparison of Marker Counts between Countries X and Y") +
-  theme_minimal()
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle=300, vjust=0.6))
+
+# display graph
+markerGraph
