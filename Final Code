@@ -178,7 +178,7 @@ plotNumberOfInfectedForAllCountries("path/to/csv/files/compiled_data.csv")
 
 # Question 2
 # Determine Vaccine compatability by comparing marker frequencies
-compareMarkerFrequencies(filePath)
+compareMarkerFrequencies("path/to/csv/files/compiled_data.csv")
 
 #The vaccine for Country Y will not work for Country X as they do not have the same markers, thus the immune system will not react the same. 
 
