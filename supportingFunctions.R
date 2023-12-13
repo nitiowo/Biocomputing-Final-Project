@@ -126,6 +126,37 @@ compileData <- function(countryPaths = countryPaths, countryList = countryList, 
   #that identify as female.
 #5. Make a graph to show the age distribution of patients (histogram using ggplot)
 
-summarizeData <- function(combinedData = "C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv"){
-  return()
+combinedData <- "C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv"
+summarize <- function(combinedData = "C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv"){ #function
+  data <- read.csv(combinedData) #read the combinedData file
+  library(ggplot2) #load ggplot library
+  library(cowplot) #load cowplot library
+  infectedPatients <- 0 #set the number of infected patients counter to 0
+  males <- 0
+  NumberOfScreensRun <- nrow(data) - 1
+  print(paste("The number of screens run between both countries was", {NumberOfScreensRun}))
+  for(i in 1:nrow(data)){
+    markersSum <- data$marker01[i] + data$marker02[i] + data$marker03[i] + data$marker04[i] + data$marker05[i] + data$marker06[i] + data$marker07[i] + data$marker08[i] + data$marker09[i] + data$marker10[i]
+    if(markersSum > 0){
+      infectedPatients <- infectedPatients + 1
+    }
+    percentInfected <- 100*(infectedPatients/NumberOfScreensRun)
+  }
+  print(paste("The percentage of patients who are infected is ", percentInfected, "percent."))
+  for(j in 1:nrow(data)){
+    if(data$gender[j] == "male")
+      males <- males + 1
+  }
+  percentMale <- 100*(males/NumberOfScreensRun)
+  percentFemale <- 100 - percentMale
+  print(paste("The percentage of patients who identify as male is", percentMale, "percent."))
+  print(paste("The percentage of patients who identify as female is", percentFemale, "percent."))
+  agePlot <- ggplot(data = data, aes(x = age)) + #similar to an example in lecture 20
+    geom_histogram(binwidth = 1, fill = "red", color = "black") + #similar to an example in lecture 20
+    xlab("Age (years)") + #similar to an example in lecture 20
+    ylab("Number of patients") + #similar to an example in lecture 20
+    theme_classic() #similar to an example in lecture 20
+  print(agePlot) #print the plot
+  return(agePlot) #return statement
 }
+summarize("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv")
