@@ -232,13 +232,13 @@ dataSummary<-function(workingDir, file){
     theme_bw() +
     xlab("Patient Age") +
     ylab("Count")+
-    title("Age Distribution of Patients")
+    ggtitle("Age Distribution of Patients")
   
   # present data to user 
   print(paste("The number of screens run is: ", numberofScreens))
   print(paste("Percent of patients that were infected: ", percentInfected,"%"))
-  print(paste("Percent of Male Patients: "), percentMale,"%")
-  print(paste("Percent of Female Patients: "), percentFemale,"%")
+  print(paste("Percent of Male Patients: ", percentMale,"%"))
+  print(paste("Percent of Female Patients: ", percentFemale,"%"))
   
   # displays age graph
   ageGraph
