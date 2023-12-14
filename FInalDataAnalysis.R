@@ -1,3 +1,4 @@
+#Connor Hinkes, Nicholas Buhay, Michael Conde
 #Question 1 - Which country did the disease begin (X/Y)?
 # First: Get a summary of total people infected (at least one positive marker)
 # We can mark “infected by totaling the markers per patient and see if it ≥0
