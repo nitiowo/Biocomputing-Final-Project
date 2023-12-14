@@ -168,3 +168,7 @@ markerGraph<-ggplot(long_df, aes(x = marker, y = value, fill = country)) +
 
 # display graph
 markerGraph
+
+othe
+
+house 
