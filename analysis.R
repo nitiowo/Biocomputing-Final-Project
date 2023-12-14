@@ -2,9 +2,15 @@
 #2023-Dec-13
 #Biocomputing Final Project
 
+#####Please read next three blocks of comments before grading#######
+
 #The graphs that support the questions will appear toward the bottom
 #I have included the answers here to reduce the amount of searching required to find them
-#Also, there is a for loop around line 80 that will take 10-20 seconds to process
+#The directory at line 47, 51, 56, and 67 will need to be properly set before executing the code
+#In supportingFunctions.R the two filepaths leading to the all.csv file on line 73 need to be updated
+#Then if you hold down ctrl and hold down enter until R gets through all of the code the graphs should appear after about 10-20 seconds
+#Main reason for this delay is the for loop around line 100
+
 
 #Answer to Question 1: Supported with graph produced by code towards bottom
 #As shown in the graph to the right, Country X has new cases from the first day of testing until the last day of testing.
@@ -22,42 +28,52 @@
 
 
 
-
-#use source() function to load
-#functions defined in supportingFunctions.R
-#compile all data into single .csv file
-#process data included in the entire data set
-#to answer the two questions
-#1. in what country (X or Y) did the disease outbreak
-#likely begin?
-#and
-#2. If country Y develops a vaccine for the disease, is
-#it likely to work for citizens of country X?
-#think about we are on day 175 and now will this work in other country
-#disease progression over time in each country
-#since spans from 55 days ago to today
-#all 10 are associated with disease, so even just 1
-#pressense or absense of those
-#two patients with similar microsatelites probably same or close
-#if very different probably different strain
-#screens run on day 120
-#day 121 there is another file for that, etc
-#country y is in different format
-#all.data allows us to make graph etc. and gives us an output example
-
-#First I will initiate ggplot and load in the "allData.csv" that was created in the first part
-
 #clear previous contents
 rm(list=ls())
+
+#set working directory to the folder containing this file and the supportingFunctions.R file
+#setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
+
+
 #set working directory to the folder where allData.csv is contained
 setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
-# load a package every time you wish to use it
+
+#load a package every time you wish to use it
+
+source("supportingFunctions.R")
 library(ggplot2)
 library(cowplot)
 
 
+#Use the functions created in supportingFunctions.R to accomplish data transformation and compilation
+
+###Use custom function convertdirectorytocsv() to convert all .txt files in countryY directory to .csv files
+#Usage: convertdirectorytocsv(directory_containing_country_.txt_files)
+convertdirectorytocsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY")
+
+##use custom function to compile all files in country X database
+#Usage: many2onecsv(directory_containing_country_.csv_files)
+many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryX/")
+
+#use custom function to compile all files in country Y database and append them to the compiled data created from country X database
+#This function can continued to be called, by replacing the directory name with whatever country has a directory of compiled .csv files
+#Usage: many2onecsv(directory_containing_country_.csv_files)
+many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY/")
+
+
+
+
+
+
+#####custom function that converts the data in all.csv and creates a data frame for each graph used to support answers to the questions
+#data frames produces will be final_df_for_analysis and final_dt_for_bar_plot
+#new directory needs to be set before running
+#set wd to directory with the all.csv file
+setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
+
+
 #load the combined data from all countries and name it "data"
-data<-read.csv("allData.csv")
+data<-read.csv("all.csv")
 head(data)
 
 
@@ -67,7 +83,6 @@ dfcx
 
 dfcy <- data.frame("Marker_01_Y" = integer(), "Marker_02_Y" = integer(), "Marker_03_Y" = integer(), "Marker_04_Y" = integer(), "Marker_05_Y" = integer(), "Marker_06_Y" = integer(), "Marker_07_Y" = integer(), "Marker_08_Y" = integer(), "Marker_09_Y" = integer(), "Marker_10_Y" = integer(), "Cumulative_Pos_Y" = integer(), "DayofYear_Y" = integer(), stringsAsFactors = FALSE)
 dfcy
-head(data)
 
 
 #Since I will not need gender or age columns to answer the following questions I can remove them. I can always append them back in later if needed for other statistical analysis.
@@ -88,8 +103,8 @@ head(data)
 #Then I will look through each marker in that row to determine if there is a positive marker
 #As soon as a positive marker is detected, the nested for loop will "break", the data will be placed into the next row in the corresponding countries dataframe
 #And the next row will be looked at by the starting for loop
-for (j in 1:length(data$country)){
-  if (data$country[j] == "X"){
+for (j in 1:length(data$Country)){
+  if (data$Country[j] == "X"){
     for (i in 1:(length(colnames(data))-2)){
       if (data[j,i] == 1){
         dfcx[nrow(dfcx) + 1,] <- data[j,]
@@ -106,11 +121,7 @@ for (j in 1:length(data$country)){
     }
   }
 }
-head(dfcx)
-tail(dfcx)
-head(dfcy)
-tail(dfcy)
-tail(data)
+
 length(colnames(data))
 #Now that I have all the positive cases from country X and country Y in separate data frames, I can
 #Analyze the total number of markers and subjects that were listed for each day of the year
@@ -205,6 +216,8 @@ dayxprev = data$dayofYear[1]
 #it can be used for both country x and y
 initvec <- c(rep(0, 11),first_day)
 
+
+
 #for loop will go through each row in markercumulativex
 #dayxcurr will be initially saved as whatever the day of the year is for the current row in the loop
 #in this case I need to save the row from the previous loop (or as all zeros other than the day if it was the first time through the loop)
@@ -252,7 +265,7 @@ y_totals_by_day <- data.frame("Marker_01_Y" = integer(), "Marker_02_Y" = integer
 dayycurr = data$dayofYear[1]
 dayyprev = data$dayofYear[1]
 
-#for loop will go through each row in markercumulativey
+#for loop will go through each row in marker cumulatively
 #dayycurr will be initially saved as whatever the day of the year is for the current row in the loop
 #in this case I need to save the row from the previous loop (or as all zeros other than the day if it was the first time through the loop)
 #I need to determine how many days were skipped to know how many rows to make
@@ -297,7 +310,7 @@ cum_total_x <- c(x_totals_by_day$Cumulative_Pos_X)
 cum_total_y <- c(y_totals_by_day$Cumulative_Pos_Y)
 
 
-#Now I will create a new column filled with the country designation (X or Y), and of the same length as the columns in x_toatls_by_day / y_totals_by_day
+#Now I will create a new column filled with the country designation (X or Y), and of the same length as the columns in x_totals_by_day / y_totals_by_day
 #Since the length of the column is going to be the number of days of testing I can create a new vector for the day of the year called "doy"
 
 doy <- c(first_day:last_day)
@@ -309,8 +322,8 @@ doy <- c(first_day:last_day)
 
 vector_x = rep.int("x", length(doy))
 vector_y = rep.int("y", length(doy))
-
-
+doy
+x_totals_by_day
 #Now I will append these vectors onto their respective countries using cbind
 
 x_totals_by_day <- cbind(x_totals_by_day,vector_x)
@@ -321,35 +334,11 @@ head(y_totals_by_day)
 #Now I will create a final data frame and place the country Y rows after the country X rows using rbind()
 #First I will have to rename the columns so they match
 
-x_totals_by_day <- x_totals_by_day %>% rename("Marker_01" = "Marker_01_X",
-                                              "Marker_02" = "Marker_02_X",
-                                              "Marker_03" = "Marker_03_X",
-                                              "Marker_04" = "Marker_04_X",
-                                              "Marker_05" = "Marker_05_X",
-                                              "Marker_06" = "Marker_06_X",
-                                              "Marker_07" = "Marker_07_X",
-                                              "Marker_08" = "Marker_08_X",
-                                              "Marker_09" = "Marker_09_X",
-                                              "Marker_10" = "Marker_10_X",
-                                              "Cum_Pos" = "Cumulative_Pos_X",
-                                              "day_of_year" = "DayofYear_X",
-                                              "Country" = "vector_x")
+colnames(x_totals_by_day) <- c("Marker_01","Marker_02","Marker_03","Marker_04","Marker_05","Marker_06","Marker_07","Marker_08","Marker_09","Marker_10","Cum_Pos","day_of_year","Country")
 
 head(x_totals_by_day)
 
-y_totals_by_day <- y_totals_by_day %>% rename("Marker_01" = "Marker_01_Y",
-                                              "Marker_02" = "Marker_02_Y",
-                                              "Marker_03" = "Marker_03_Y",
-                                              "Marker_04" = "Marker_04_Y",
-                                              "Marker_05" = "Marker_05_Y",
-                                              "Marker_06" = "Marker_06_Y",
-                                              "Marker_07" = "Marker_07_Y",
-                                              "Marker_08" = "Marker_08_Y",
-                                              "Marker_09" = "Marker_09_Y",
-                                              "Marker_10" = "Marker_10_Y",
-                                              "Cum_Pos" = "Cumulative_Pos_Y",
-                                              "day_of_year" = "DayofYear_Y",
-                                              "Country" = "vector_y")
+colnames(y_totals_by_day) <- c("Marker_01","Marker_02","Marker_03","Marker_04","Marker_05","Marker_06","Marker_07","Marker_08","Marker_09","Marker_10","Cum_Pos","day_of_year","Country")
 
 head(y_totals_by_day)
 
@@ -359,13 +348,7 @@ head(final_df_for_analysis)
 #Now I will create the graph to compare the cumulative number of positive cases for each country on each day of testing
 
 
-#Graph supporting answer to question 1 as stated above:
-ggplot(data = final_df_for_analysis,
-       aes(x = day_of_year, y = Cum_Pos, color = Country)) +
-  geom_point() +
-  xlab("Day of Year") +
-  ylab("Cumulative Positive") +
-  theme_classic()
+
 
 
 #------------------------------------------------------------------------------
@@ -419,14 +402,18 @@ colnames(newdty)[3] <- "Country"
 final_dt_for_bar_plot <- rbind(newdtx,newdty)
 
 
+
+#Graph supporting answer to question 1 as stated above:
+ggplot(data = final_df_for_analysis,
+       aes(x = day_of_year, y = Cum_Pos, color = Country)) +
+  geom_point() +
+  xlab("Day of Year") +
+  ylab("Cumulative Positive") +
+  theme_classic()
+
+
+#Now I will create the graph to support my answer for question 2
+
 ggplot(final_dt_for_bar_plot, aes(x = marker, y = Count, fill = Country)) +
   geom_col(position = "dodge")
 
-
-head(mpg)
-#strsplit(x,"_")
-#split function up into functions
-#get a list back, first element is first part with vector of first part
-#what i want to split is first argument
-#second element is what i want to use to split (essentially removes that second element
-#and splits there)
