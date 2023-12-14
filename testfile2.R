@@ -1,4 +1,3 @@
-setwd("~/Desktop/shell-lesson-data/exercises/Biocomputing-Final-Project")
 
 # read in data
 allData<-read.csv("allData.csv", header=TRUE)
@@ -168,7 +167,3 @@ markerGraph<-ggplot(long_df, aes(x = marker, y = value, fill = country)) +
 
 # display graph
 markerGraph
-
-othe
-
-house 
