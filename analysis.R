@@ -1,7 +1,27 @@
-#James Magas
-#2023-03-12
+#James Magas and Kate Jackowski
+#2023-Dec-13
 #Biocomputing Final Project
-#analysis portion
+
+#The graphs that support the questions will appear toward the bottom
+#I have included the answers here to reduce the amount of searching required to find them
+#Also, there is a for loop around line 80 that will take 10-20 seconds to process
+
+#Answer to Question 1: Supported with graph produced by code towards bottom
+#As shown in the graph to the right, Country X has new cases from the first day of testing until the last day of testing.
+#Country Y, however did not have any positive cases until about day 140 of testing.
+#This indicates that the disease outbreak likely began in Country X.
+
+#Answer to Question 2: Supported with graph produced by code towards bottom
+#As shown by the bar graph, there are more occurrences of marker 4 and 5 for country Y than
+#there are for country X, and there are far fewer occurrences of markers 7 - 10 for
+#country Y than there are for country X. This indicates that a vaccine developed by country Y
+#will most likely be targeting a mutated form of the disease-causing agent, rather than the
+#form of the agent afflicting country X. Based on this evidence it is reasonable to say that
+#the vaccine is unlikely to work as well (if at all) for the citizens of Country X as it does
+#for the citizens of Country Y.
+
+
+
 
 #use source() function to load
 #functions defined in supportingFunctions.R
@@ -29,10 +49,12 @@
 
 #clear previous contents
 rm(list=ls())
-
+#set working directory to the folder where allData.csv is contained
+setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
 # load a package every time you wish to use it
 library(ggplot2)
 library(cowplot)
+
 
 #load the combined data from all countries and name it "data"
 data<-read.csv("allData.csv")
@@ -64,7 +86,7 @@ head(data)
 #And I will be placing any positive cases from country Y into a separate data frame
 #I will do this by first checking the row to see what country the data pertains to
 #Then I will look through each marker in that row to determine if there is a positive marker
-#As soon as a positive marker is detected, the nested for loop will "break", the data will be placed into the next row in the correspoding countries dataframe
+#As soon as a positive marker is detected, the nested for loop will "break", the data will be placed into the next row in the corresponding countries dataframe
 #And the next row will be looked at by the starting for loop
 for (j in 1:length(data$country)){
   if (data$country[j] == "X"){
@@ -88,7 +110,8 @@ head(dfcx)
 tail(dfcx)
 head(dfcy)
 tail(dfcy)
-
+tail(data)
+length(colnames(data))
 #Now that I have all the positive cases from country X and country Y in separate data frames, I can
 #Analyze the total number of markers and subjects that were listed for each day of the year
 #I will end up with one row for each day of the year, that will include the cumulative total up through that day for both the individual markers and the subjects
@@ -182,7 +205,6 @@ dayxprev = data$dayofYear[1]
 #it can be used for both country x and y
 initvec <- c(rep(0, 11),first_day)
 
-
 #for loop will go through each row in markercumulativex
 #dayxcurr will be initially saved as whatever the day of the year is for the current row in the loop
 #in this case I need to save the row from the previous loop (or as all zeros other than the day if it was the first time through the loop)
@@ -263,53 +285,148 @@ for (i in 1:length(markercumulativey$day_of_year)){
 }
 
 #If there is a gap in day_of_yearx somewhere from 120-175 I need to insert a row in using data from previous row so that there are no gaps in days and so both country x and country y have the same nubmer of rows
-tail(x_totals_by_day)
-tail(y_totals_by_day)
 head(x_totals_by_day)
+tail(x_totals_by_day)
+head(y_totals_by_day)
+tail(y_totals_by_day)
+
+#Cumulative positive cases for country X will be created next
+cum_total_x <- c(x_totals_by_day$Cumulative_Pos_X)
+
+#Cumulative positive cases for country Y will be created next
+cum_total_y <- c(y_totals_by_day$Cumulative_Pos_Y)
+
+
+#Now I will create a new column filled with the country designation (X or Y), and of the same length as the columns in x_toatls_by_day / y_totals_by_day
+#Since the length of the column is going to be the number of days of testing I can create a new vector for the day of the year called "doy"
+
+doy <- c(first_day:last_day)
+
+#Then I will create another data frame for showing why a vaccine developed by country Y might not be as effective for country X
+#This data frame will be called marker_summary
+#It will consist of 10 columns listing the name of each tested marker and two rows labeled Country X and Country Y
+#The data used for each cell will be the total number of positive markers corresponding to that columns marker and the country for which the total was calculated 
+
+vector_x = rep.int("x", length(doy))
+vector_y = rep.int("y", length(doy))
+
+
+#Now I will append these vectors onto their respective countries using cbind
+
+x_totals_by_day <- cbind(x_totals_by_day,vector_x)
+head(x_totals_by_day)
+y_totals_by_day <- cbind(y_totals_by_day,vector_y)
 head(y_totals_by_day)
 
+#Now I will create a final data frame and place the country Y rows after the country X rows using rbind()
+#First I will have to rename the columns so they match
+
+x_totals_by_day <- x_totals_by_day %>% rename("Marker_01" = "Marker_01_X",
+                                              "Marker_02" = "Marker_02_X",
+                                              "Marker_03" = "Marker_03_X",
+                                              "Marker_04" = "Marker_04_X",
+                                              "Marker_05" = "Marker_05_X",
+                                              "Marker_06" = "Marker_06_X",
+                                              "Marker_07" = "Marker_07_X",
+                                              "Marker_08" = "Marker_08_X",
+                                              "Marker_09" = "Marker_09_X",
+                                              "Marker_10" = "Marker_10_X",
+                                              "Cum_Pos" = "Cumulative_Pos_X",
+                                              "day_of_year" = "DayofYear_X",
+                                              "Country" = "vector_x")
+
+head(x_totals_by_day)
+
+y_totals_by_day <- y_totals_by_day %>% rename("Marker_01" = "Marker_01_Y",
+                                              "Marker_02" = "Marker_02_Y",
+                                              "Marker_03" = "Marker_03_Y",
+                                              "Marker_04" = "Marker_04_Y",
+                                              "Marker_05" = "Marker_05_Y",
+                                              "Marker_06" = "Marker_06_Y",
+                                              "Marker_07" = "Marker_07_Y",
+                                              "Marker_08" = "Marker_08_Y",
+                                              "Marker_09" = "Marker_09_Y",
+                                              "Marker_10" = "Marker_10_Y",
+                                              "Cum_Pos" = "Cumulative_Pos_Y",
+                                              "day_of_year" = "DayofYear_Y",
+                                              "Country" = "vector_y")
+
+head(y_totals_by_day)
+
+final_df_for_analysis <- rbind(x_totals_by_day, y_totals_by_day)
+head(final_df_for_analysis)
+
+#Now I will create the graph to compare the cumulative number of positive cases for each country on each day of testing
+
+
+#Graph supporting answer to question 1 as stated above:
+ggplot(data = final_df_for_analysis,
+       aes(x = day_of_year, y = Cum_Pos, color = Country)) +
+  geom_point() +
+  xlab("Day of Year") +
+  ylab("Cumulative Positive") +
+  theme_classic()
+
+
+#------------------------------------------------------------------------------
+
+#For question 2 I will need to format a data frame of the final day's cumulative counts for all markers for both countries
+
+#I will create a vector with a column containing all markers. This column will be used for the x-axis in my bar plot
+marker <- (c("Marker_01", "Marker_02", "Marker_03", "Marker_04", "Marker_05", "Marker_06", "Marker_07", "Marker_08", "Marker_09", "Marker_10"))
+
+#This code obtains the final cumulative counts for both countries and transposes them into 1 column
+#It also only keeps the data related to the markers
+
+total_marker_count_x <- head(t(tail(x_totals_by_day,1)),length(marker))
+total_marker_count_y <- head(t(tail(y_totals_by_day,1)),length(marker))
+
+#Now I'll rename the column to keep help keep track of the country the counts belong to
+colnames(total_marker_count_x) <- "Xcount"
+colnames(total_marker_count_y) <- "Ycount"
+
+#Now I'll create a column of Country designation characters that is the length of the number of markers used in the study
+country_marker_x <- c(rep("X",length(marker)))
+country_marker_y <- c(rep("Y",length(marker)))
+
+#Now I'll turn the the vectors into data frames and then combine the three columns
+country_marker_x <- data.frame(country_marker_x)
+country_marker_y <- data.frame(country_marker_y)
+total_marker_count_x <- data.frame(total_marker_count_x)
+total_marker_count_y <- data.frame(total_marker_count_y)
+marker <- data.frame(marker, stringsAsFactors = FALSE)
 
 
 
-#there will also be 20 variables created: each of the 10 markers will have a running total for each country
-#this way we can get the average number of instances that each marker was positive for each country
-#this will allow us to decide if both countrys can use a vaccine made by one country or the other
+#Combining all three columns
 
-#It may be most efficient to do this with a separate loop, one that ignores dayofYear column and just looks at country column
-#each iteration copies row with country X to 
+newdtx <- cbind(marker,total_marker_count_x,country_marker_x)
+newdty <- cbind(marker,total_marker_count_y,country_marker_y)
+
+#Now I will remove the row names since they are redundant
+#And rename the column names so they match when I combine them
+rownames(newdtx) <- NULL
+rownames(newdty) <- NULL
+colnames(newdtx)[2] <- "Count"
+colnames(newdtx)[3] <- "Country"
+colnames(newdty)[2] <- "Count"
+colnames(newdty)[3] <- "Country"
 
 
+#then I will add the y marker count dataframe below the x marker count dataframe
+#then the x axis will be marker number, the y-axis will be marker counts, and i will be able to fill the bar plot by country designation
 
-#also will need to get an average value for the markers for each country
-#probably best to display that with ten couples of bar plots to see how similar those numbers are
+final_dt_for_bar_plot <- rbind(newdtx,newdty)
 
+
+ggplot(final_dt_for_bar_plot, aes(x = marker, y = Count, fill = Country)) +
+  geom_col(position = "dodge")
+
+
+head(mpg)
 #strsplit(x,"_")
 #split function up into functions
 #get a list back, first element is first part with vector of first part
 #what i want to split is first argument
 #second element is what i want to use to split (essentially removes that second element
 #and splits there)
-
-#for part 1 I'm going to want to show how many cases for country x and country y occurred over time, accumulating them
-#day to day
-#this should show that one country had more cases than the other country first
-#this should indicate what country had the disease first
-
-
-#scores<-rbind(0,scores) - to get a row of 0s
-
-#for graph dayofYear is going to be x-axis and number of positive cases is
-#going to be y-axis
-#I will have two line graphs that share the same x and y axis
-#but y value will change differently for each country
-#I will need to create a line of scores vs time for MSU and another for UW
-#remove x tick marks
-#make graph start at 0 in x-axis and y-axis
-
-ggplot(Positive_Cases, aes(x = dayofYear)) +
-  geom_line(aes(y = X), linewidth = 2, color = "darkgreen") +
-  geom_line(aes(y = Y), linewidth = 2, color = "purple") +
-  xlab("Time (Day of Year)") +
-  ylab("Positive Cases") +
-  theme(axis.ticks.x = element_blank())
-
