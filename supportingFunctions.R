@@ -1,11 +1,3 @@
-library(ggplot2)
-library(cowplot)
-#set pathway
-directory_X <- "/Users/vivianyang/Documents/GitHub/Biocomputing-Final-Project/countryX"
-directory_Y <- "/Users/vivianyang/Documents/GitHub/Biocomputing-Final-Project/countryY"
-
-# Country X's files are already in comma-delimited format;
-# Country Y need to be changed from tab-delimited to comma-delimited
 convert_Y_to_csv <- function(directory) {
   # Get a list of all files in the directory
   all_file <- list.files(directory)
@@ -20,10 +12,6 @@ convert_Y_to_csv <- function(directory) {
     # Write into a csv file
     write.csv(data, csv_file_name, row.names = FALSE)
   }}
-setwd("/Users/vivianyang/Documents/GitHub/Biocomputing-Final-Project/countryY")
-convert_Y_to_csv(directory_Y)
-
-
 
 compile_data <- function(directory){
   # Get a list of all files in the directory
@@ -41,20 +29,38 @@ compile_data <- function(directory){
     splited_csv <- paste(split_csv)
     split_year <- strsplit(splited_csv, "_")
     year <- split_year[[1]][2]
+    # Add a new column 'country'
+    data$country <- c(rep(country, nrow(data)))
     # Add a new column 'dayofYear'
     data$dayofYear <- c(rep(year, nrow(data)))
-    # Add a new column 'Country'
+    
     compiled_data <- rbind(compiled_data, data)
   }
   # Write into a csv file
   write.csv(compiled_data, output, row.names = FALSE)
 }
-setwd("/Users/vivianyang/Documents/GitHub/Biocomputing-Final-Project/countryX")
-compile_data(directory_X)
-setwd("/Users/vivianyang/Documents/GitHub/Biocomputing-Final-Project/countryY")
-compile_data(directory_Y)
 
-compiled_country <- data.frame()
-countryX <- read.csv("X.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-countryY <- read.csv("Y.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-compiled_data <- rbind(countryX, countryY)
+#data analysis
+analysis <- function(x){
+  #number of screen runs
+  table <- read.csv(x, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+  number <- dim(table)[1]
+  text <- "The total number of screening is"
+  print(paste(text, number))
+
+  #percent of patients screened that were infected and put it to a dataframe
+  total_infection <- 0
+  for (i in 1:nrow(table)) {
+    for (j in 3:12){
+      if (!is.na(table[i,j]) && table[i,j] >= 1){
+        total_infection <- total_infection+1
+        break
+      }
+      }
+  }
+  text_2 <- "percentage of infected patients is "
+  calc <- total_infection/number *100
+  print(paste(text_2, calc))
+  
+}
+
