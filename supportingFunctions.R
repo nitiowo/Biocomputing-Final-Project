@@ -42,7 +42,8 @@ commaTabtoCSV <- function(punctuation,file){
 #contents of z.
 
 #Process:
-#1. Set working directory with setwd() to be in the right folder
+#1. Set working directory with setwd() to be in the right folder (the instructions say
+  #that the function only needs to compile data from all .csv files in a single directory)
 #2. Make a list of the files in the directory with list.files() in the working 
 #directory
 #3. Body of the custom function designed to combine all of this data.
@@ -63,9 +64,9 @@ commaTabtoCSV <- function(punctuation,file){
   #NA values), "NA with warning" to keep the NA values in the combined data but to provide
   #a warning to the user, or "keep NA" to keep all NA values without warning the user.
 
-countryPaths <- list("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/countryX") #list of directory paths
-countryList <- list("X") #list of the countries
-NAChoice <- "no NA" #input for the NA Choice
+countryPaths <- list("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/countryX") #list of directory paths; for demonstration purposes, country X's path is provided
+countryList <- list("X") #list of the countries; for demonstration purposes, country X's path is provided
+NAChoice <- "no NA" #input for the NA Choice; for demonstration purposes, no NA is used
 compileData <- function(countryPaths = countryPaths, countryList = countryList, NAChoice = NAChoice){ #function
   output.csv <- data.frame() #create an empty dataframe for the intermediate output
   FinalOutput.csv <- data.frame() #create an empty dataframe for the final output
@@ -126,37 +127,37 @@ compileData <- function(countryPaths = countryPaths, countryList = countryList, 
   #that identify as female.
 #5. Make a graph to show the age distribution of patients (histogram using ggplot)
 
-combinedData <- "C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv"
+combinedData <- "C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv" #from this point onwards, the instructions say that using the allData.csv file is allowed
 summarize <- function(combinedData = "C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv"){ #function
   data <- read.csv(combinedData) #read the combinedData file
   library(ggplot2) #load ggplot library
   library(cowplot) #load cowplot library
-  infectedPatients <- 0 #set the number of infected patients counter to 0
-  males <- 0
-  NumberOfScreensRun <- nrow(data) - 1
-  print(paste("The number of screens run between both countries was", {NumberOfScreensRun}))
-  for(i in 1:nrow(data)){
-    markersSum <- data$marker01[i] + data$marker02[i] + data$marker03[i] + data$marker04[i] + data$marker05[i] + data$marker06[i] + data$marker07[i] + data$marker08[i] + data$marker09[i] + data$marker10[i]
-    if(markersSum > 0){
-      infectedPatients <- infectedPatients + 1
+  infectedPatients <- 0 #initially set the number of infected patients counter to 0
+  males <- 0 #initially set the number of males counter to 0
+  NumberOfScreensRun <- nrow(data) - 1 #this is the number of tests conducted (the -1 is due to the first row being the column names)
+  print(paste("The number of screens run between both countries was", {NumberOfScreensRun})) #print the number of screens run as output
+  for(i in 1:nrow(data)){ #iterate through each row of the combined data file
+    markersSum <- data$marker01[i] + data$marker02[i] + data$marker03[i] + data$marker04[i] + data$marker05[i] + data$marker06[i] + data$marker07[i] + data$marker08[i] + data$marker09[i] + data$marker10[i] #sum the values of the markers to check for positivity
+    if(markersSum > 0){ #if the number of positive markers is greater than 0
+      infectedPatients <- infectedPatients + 1 #the number of infectedPatients is increased by 1 if the test is positive
     }
-    percentInfected <- 100*(infectedPatients/NumberOfScreensRun)
+    percentInfected <- 100*(infectedPatients/NumberOfScreensRun) #multiply the proportion of infected patients divided by the number of screens run by 100% to convert the number of patients infected to the percentage of patients who are infected
   }
-  print(paste("The percentage of patients who are infected is ", percentInfected, "percent."))
-  for(j in 1:nrow(data)){
-    if(data$gender[j] == "male")
-      males <- males + 1
+  print(paste("The percentage of patients who are infected is ", percentInfected, "percent.")) #print the percentage of patients who are infected
+  for(j in 1:nrow(data)){ #iterate through each row of the combined data
+    if(data$gender[j] == "male") #check whether the patient is male
+      males <- males + 1 #if the patient is male, add 1 to the males counter
   }
-  percentMale <- 100*(males/NumberOfScreensRun)
-  percentFemale <- 100 - percentMale
-  print(paste("The percentage of patients who identify as male is", percentMale, "percent."))
-  print(paste("The percentage of patients who identify as female is", percentFemale, "percent."))
-  agePlot <- ggplot(data = data, aes(x = age)) + #similar to an example in lecture 20
-    geom_histogram(binwidth = 1, fill = "red", color = "black") + #similar to an example in lecture 20
-    xlab("Age (years)") + #similar to an example in lecture 20
-    ylab("Number of patients") + #similar to an example in lecture 20
-    theme_classic() #similar to an example in lecture 20
+  percentMale <- 100*(males/NumberOfScreensRun) #multiply 100% by the proportion of patients who are male
+  percentFemale <- 100 - percentMale #find the percentage of patients who are female by subtracting the percentage of patients who are male from 100 percent
+  print(paste("The percentage of patients who identify as male is", percentMale, "percent.")) #print the percentage of patients who are male
+  print(paste("The percentage of patients who identify as female is", percentFemale, "percent.")) #print the percentage of patients who are female
+  agePlot <- ggplot(data = data, aes(x = age)) + #make a histogram for the age distribution; similar to an example in lecture 20
+    geom_histogram(binwidth = 1, fill = "red", color = "black") + #make a histogram with a bar for every year, red bars, and bars with a black outline
+    xlab("Age (years)") + #make the x label age
+    ylab("Number of patients") + #make the y label the frequency of each age
+    theme_classic() #change the theme of the histogram
   print(agePlot) #print the plot
   return(agePlot) #return statement
 }
-summarize("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv")
+summarize("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv") #run the summarize function with the allData.csv file
