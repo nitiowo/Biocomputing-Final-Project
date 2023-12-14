@@ -32,6 +32,19 @@ epidemicdata <- data %>%
   group_by(country, dayofYear) %>%
   summarise(incidence = sum(infection_status))
 
+###Summary Statistics: 
+#Number of screens run: 39744 
+#Percentage of patients screened that were infected: 16.96608 %
+#Percentage of patients identifying as male: 50.15348 %
+#Percentage of patients identifying as female: 49.84652 %
+#Age distribution of patients: 
+#  1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32   33   34   35   36   37   38   39 
+#943 2880 3472 3528 3077 2759 2464 2005 1879 1604 1443 1286 1143  991  902  750  659  611  572  531  411  418  408  366  290  317  275  239  234  208  180  188  156  144  133  125  132  123   98 
+#40   41   42   43   44   45   46   47   48   49   50   51   52   53   54   55   56   57   58   59   60   61   62   63   64   65   66   67   68   69   70   71   72   73   74   75   76   77   78 
+#105  111   76   75   62   72   44   57   73   60   56   49   51   39   47   43   45   29   36   43   29   30   25   27   22   36   24   14   29   17   20   16   19   11   20   14   11   14   17 
+#79   80   81   82   83   84   85   86   87   88   89   90   91   92   93   94   95   96   97   98   99  100  101  102  103  104  105  106  107  108  109 
+#11    7   12   13   14   12    9    5   14   15    6    7   12   12    5    4    9    4    7    8    6    6    4    9    2    2    2    4    3    5    3 
+
 # Plot data for question 1
 ggplot(epidemicdata, aes(x=dayofYear, y=incidence)) +
   geom_line(aes(color = country, linetype = country)) +
