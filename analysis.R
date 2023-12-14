@@ -23,4 +23,31 @@ ggplot(data = positive, aes(x = country, y = dayofYear, color = country)) +
   geom_jitter()
 
 #### question 1 answer ----
-# 
+# the outbreak likely began in country X. Country X has positive individuals starting
+# at day 120, the first day of the screening. Country Y has positive individuals starting
+# at day 140ish, almost 20 days after country X. This means that the outbreak
+# probably started in country X and spread to country Y about 20 days later.
+
+#### question 2: if country Y develops a vaccine, will it work for country X?
+
+# what to do:
+# see how similar the diseases are based on the microsatellite data
+
+# count the total number of microsatellites per marker per country, save as dataframe
+x_markers <- apply(alldata[alldata$country == "X", 3:12], 2, FUN = sum)
+y_markers <- apply(alldata[alldata$country == "Y", 3:12], 2, FUN = sum)
+
+# compile x_markers and y_markers into one dataset
+# note: I realize this code is not versatile or applicable, but I could not figure
+# out a different way to turn the x_markers and y_markers data into a dataframe that
+# would be usable in ggplot. The dataframe I was able to make was formatted weirdly
+# and wouldn't work, so I didn't include it and did the following instead.
+markers <- data.frame(marker = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6,
+                                 7, 8, 9, 10),
+                      country = c("X", "X", "X", "X", "X", "X", "X", "X", "X", "X",
+                                  "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y"),
+                      sum = c(6545, 6658, 6549, 6765, 6605, 55, 78, 78, 66, 63,
+                              198, 205, 210, 809, 791, 1879, 1905, 1425, 1467, 1439))
+# plot the data with the marker on the x axis, sum on y axis, and color by country
+ggplot(data = markers, aes(x = marker, y = sum, color = country)) +
+  geom_jitter()
