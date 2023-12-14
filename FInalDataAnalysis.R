@@ -66,8 +66,6 @@ print(cumulative_infection_plot)
 # that a vaccined produced in country Y will be affective in country X
 # We will need to create barplots for both countries to compare the frequency of markers
 
-library(ggplot2)
-
 # Load the dataset
 compiled_data <- read.csv("path/to/allData.csv")
 
