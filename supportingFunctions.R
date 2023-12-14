@@ -121,7 +121,7 @@ compiledCSV<-function(workingDir){
     allData2<-na.omit(allData)
     
     # creates final .csv file
-    write.csv(allData2, file="compiledData.csv", row.names=FALSE, col.names=TRUE)
+    write.csv(allData2, file="compiledData.csv", row.names=FALSE)
   
   # in the event that the user does not want to remove rows with NAs   
   }else if(findNA == "n"){
@@ -139,18 +139,18 @@ compiledCSV<-function(workingDir){
         print("No NAs in data")
       }
       #creates final .csv file
-      write.csv(allData2, file="compiledData.csv", row.names=FALSE, col.names=TRUE)
+      write.csv(allData2, file="compiledData.csv", row.names=FALSE)
       
       # in the event that the user is satisfied with unclean data
     }else if(warnNA=="n"){
-      write.csv(allData2, file="compiledData.csv", row.names=FALSE, col.names=TRUE)
+      write.csv(allData2, file="compiledData.csv", row.names=FALSE)
     }
     
     # in the event that the user types in something instead of y or n
     # default is unchanged CSV
   }else{
     print("Input not understood. Creating csv with N/As")
-    write.csv(allData2, file="compiledData.csv", row.names=FALSE, col.names=TRUE)
+    write.csv(allData2, file="compiledData.csv", row.names=FALSE)
   }
   
 }
