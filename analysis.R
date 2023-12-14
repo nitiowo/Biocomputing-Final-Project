@@ -28,7 +28,7 @@ ggplot(data = positive, aes(x = country, y = dayofYear, color = country)) +
 # at day 140ish, almost 20 days after country X. This means that the outbreak
 # probably started in country X and spread to country Y about 20 days later.
 
-#### question 2: if country Y develops a vaccine, will it work for country X?
+#### question 2: if country Y develops a vaccine, will it work for country X? ----
 
 # what to do:
 # see how similar the diseases are based on the microsatellite data
@@ -51,3 +51,14 @@ markers <- data.frame(marker = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6
 # plot the data with the marker on the x axis, sum on y axis, and color by country
 ggplot(data = markers, aes(x = marker, y = sum, color = country)) +
   geom_jitter()
+
+#### question 2 answer ----
+# If country Y develops a vaccine, it likely will not work for country X. When you
+# add up the occurence of each of the 10 markers per country, you see that country X
+# has a very high number of markers 1-5 and very low number of markers 6-10.
+# Country Y has fewer markers 1-5 and a bit higher number of markers 6-10. Because
+# the protein for immunological response is coded for in the different markers, it
+# is likely that the immune response is different between the two countries.
+# As a result, a vaccine from country Y that would accurately target that country's
+# strain and specific microsatellite markers would not work for country X because
+# of the very different distribution of markers.
