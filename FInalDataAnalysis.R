@@ -1,5 +1,8 @@
 #Connor Hinkes, Nicholas Buhay, Michael Conde
 #analysis.R
+
+#Load necessary packages and establish source files
+library(ggplot2) 
 source("SupportingFunctions.R")
 #Converting all the data to .csv files
 csvconverter("countryY/", "newcountryY")
