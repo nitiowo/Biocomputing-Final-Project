@@ -16,6 +16,7 @@ functions <- source("C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Bi
 
 #Question 1 code (using allData.csv):
 combinedData <- "C:/Users/grace/Desktop/Biocomputing 2023/R/Final Project/Biocomputing-Final-Project/allData.csv" #combined data file (allData.csv)
+data <- read.csv(combinedData) #read the combined data
 
 dayList <- 120:175 #list of the days in these files
 dayListLength <- length(dayList) #number of days
@@ -70,8 +71,6 @@ print(NumberOfPositiveCasesFigure) #print the figure with both plots
  #disease began in Country X and later spread to Country Y.
 
 #Question 2 code (using allData.csv):
-data <- read.csv(combinedData) #read the combined data
-
 markersListX <- rep(0,10) #make an empty markers list for country X
 markersListY <- rep(0,10) #make an empty markers lits for country Y
 
