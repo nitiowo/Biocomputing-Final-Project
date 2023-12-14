@@ -67,7 +67,7 @@ print(cumulative_infection_plot)
 # We will need to create barplots for both countries to compare the frequency of markers
 
 # Load the dataset
-compiled_data <- read.csv("path/to/allData.csv")
+compiled_data <- read.csv("allData.csv") #replace "allData.csv" with path to file you want
 
 # Subset the data for each country
 data_X <- subset(compiled_data, country == "X")
