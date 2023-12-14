@@ -23,7 +23,8 @@ ggplot(data = positive, aes(x = country, y = dayofYear, color = country)) +
   geom_jitter()
 
 #### question 1 answer ----
-# the outbreak likely began in country X. Country X has positive individuals starting
+# As seen from the graph, the outbreak likely began in country X. 
+# Country X has positive individuals starting
 # at day 120, the first day of the screening. Country Y has positive individuals starting
 # at day 140ish, almost 20 days after country X. This means that the outbreak
 # probably started in country X and spread to country Y about 20 days later.
@@ -54,8 +55,8 @@ ggplot(data = markers, aes(x = marker, y = sum, color = country)) +
 
 #### question 2 answer ----
 # If country Y develops a vaccine, it likely will not work for country X. When you
-# add up the occurence of each of the 10 markers per country, you see that country X
-# has a very high number of markers 1-5 and very low number of markers 6-10.
+# add up the occurence of each of the 10 markers per country, you see from the graph 
+# that country X has a very high number of markers 1-5 and very low number of markers 6-10.
 # Country Y has fewer markers 1-5 and a bit higher number of markers 6-10. Because
 # the protein for immunological response is coded for in the different markers, it
 # is likely that the immune response is different between the two countries.
