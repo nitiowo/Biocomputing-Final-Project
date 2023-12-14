@@ -1,4 +1,3 @@
-setwd("~/Desktop/shell-lesson-data/exercises/Biocomputing-Final-Project")
 
 # read in data
 allData<-read.csv("allData.csv", header=TRUE)
