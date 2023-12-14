@@ -1,4 +1,13 @@
 #Connor Hinkes, Nicholas Buhay, Michael Conde
+#analysis.R
+source("SupportingFunctions.R")
+#Converting all the data to .csv files
+csvconverter("countryY/", "newcountryY")
+#adding columns to all files and compiling it into one file called ‘our_alldata’
+addcolumnsandcompile("countryX/", "newcountryY/", "our_alldata", "disregardNAs")
+#summarizing the final document
+summary("our_alldata")
+
 #Question 1 - Which country did the disease begin (X/Y)?
 # First: Get a summary of total people infected (at least one positive marker)
 # We can mark “infected by totaling the markers per patient and see if it ≥0
