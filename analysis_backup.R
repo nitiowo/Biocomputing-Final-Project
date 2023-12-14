@@ -1,7 +1,6 @@
 #James Magas and Kate Jackowski
 #2023-Dec-13
 #Biocomputing Final Project
-#Script: analysis.R
 
 #####Please read next three blocks of comments before grading#######
 
@@ -26,8 +25,6 @@
 #form of the agent afflicting country X. Based on this evidence it is reasonable to say that
 #the vaccine is unlikely to work as well (if at all) for the citizens of Country X as it does
 #for the citizens of Country Y.
-
-
 
 
 
@@ -56,15 +53,14 @@ convertdirectorytocsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Fin
 
 ##use custom function to compile all files in country X database
 #Usage: many2onecsv(directory_containing_country_.csv_files)
-
-#User can select "warn" or "remove" as option for how to deal with NAs in data. Default is "do_nothing"
-many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryX/","remove")
+many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryX/")
 
 #use custom function to compile all files in country Y database and append them to the compiled data created from country X database
 #This function can continued to be called, by replacing the directory name with whatever country has a directory of compiled .csv files
 #Usage: many2onecsv(directory_containing_country_.csv_files)
-#User can select "warn" or "remove" as option for how to deal with NAs in data. Default is "do_nothing"
-many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY/","remove")
+many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY/")
+
+
 
 
 
@@ -79,7 +75,7 @@ setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Bioco
 #load the combined data from all countries and name it "data"
 data<-read.csv("all.csv")
 head(data)
-tail(data)
+
 
 #now i can create a dataframe for Country X and Country Y with the applicable Titles and empty rows
 dfcx <- data.frame("Marker_01_X" = integer(), "Marker_02_X" = integer(), "Marker_03_X" = integer(), "Marker_04_X" = integer(), "Marker_05_X" = integer(), "Marker_06_X" = integer(), "Marker_07_X" = integer(), "Marker_08_X" = integer(), "Marker_09_X" = integer(), "Marker_10_X" = integer(), "Cumulative_Pos_X" = integer(), "DayofYear_X" = integer(), stringsAsFactors = FALSE)
