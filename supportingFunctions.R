@@ -151,3 +151,5 @@ compareMarkerFrequencies <- function(filePath, markerPrefix = "marker") {
          y = "Frequency") +
     theme_minimal()
 }
+
+  # Stephan Lukashev
