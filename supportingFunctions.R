@@ -1,14 +1,7 @@
 #Kate Jackowski and James Magas
-#2023-Dec-13
+#2023-Dec-14
 #Biocomputing Final Project
 #Script: supportingFunctions.R
-
-
-#setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY")
-#"C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project"
-#file.remove(list.files(pattern = "*.csv"))
-#setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
-
 
 
 #1ST REQUIREMENT
@@ -19,7 +12,7 @@
 ####custom function needs to loop through all files in a directory using for loop
 ####start in directory containing files to convert
   
-#####custom function that converts a given file to a .csv file = WORKING
+#####custom function that converts a given file to a .csv file
 convert_to_csv<-function(filename){
   ogfile<-read.table(file=filename,header=TRUE,stringsAsFactors=FALSE)
   filenamevector<-paste(filename)
@@ -75,7 +68,7 @@ many2onecsv<-function(directory, NAdecision = "do_nothing"){
     data_with_all_columns<-cbind(screeningdata,Country=letter[[1]][2],dayofYear=day)
     write.table(data_with_all_columns,file="C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/all.csv",append=TRUE,sep=",",row.names = FALSE,col.names=!file.exists("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/all.csv"))
     
-    #column name issue solved by exluding column names from being written if file already exists!
+    #column name issue solved by excluding column names from being written if file already exists!
   }
   #I will now set the working directory so that I can use the newly created all.csv file
   setwd('..')
@@ -95,7 +88,7 @@ many2onecsv<-function(directory, NAdecision = "do_nothing"){
       na.omit(update)
       #once done write it to a table / csv file
       all.csv <- write.table(update)
-      #and now i am back to where i started
+      #and now i am back to where i started before manipulating all.csv
     }
     if (NAdecision == "warn"){
       #since user designated to perform action for occurances of NA I will loop through all of the columns and rows
@@ -114,7 +107,7 @@ many2onecsv<-function(directory, NAdecision = "do_nothing"){
     }
       #once done write it to a table / csv file
       all.csv <- write.table(update)
-      #and now i am back to where i started
+      #and now i am back to where i started before manipulating all.csv
   }
 }
 
@@ -166,13 +159,16 @@ sumview<-function(filename){
   female <- sum(summary$gender == "female")
   #male percent
   malepercent = 100*(male/total_screens)
+  #female percent
   femalepercent = 100*(female/total_screens)
   
+  #Creating a summarized data frame to reference if prefer that to having the data on the plot
   summarydf <- data.frame(total_screens,p_infected,malepercent,femalepercent)
   colnames(summarydf) <- c("Total Screenings", "Percent Infected", "Percent Male", "Percent Female")
   
-  #age distribution of patients
-  #my_list <- list("Histogram" = )
+
+  
+#Using ggplot to create a histogram for age distribution and displaying the needed summary data on the plot
   
   return(ggplot(summary, aes(x = age))
          + geom_histogram(binwidth = 1) +

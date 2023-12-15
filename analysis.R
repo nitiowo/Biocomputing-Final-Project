@@ -7,10 +7,10 @@
 
 #The graphs that support the questions will appear toward the bottom
 #I have included the answers here to reduce the amount of searching required to find them
-#The directory at line 47, 51, 56, and 67 will need to be properly set before executing the code
-#In supportingFunctions.R the two filepaths leading to the all.csv file on line 73 need to be updated
-#Then if you hold down ctrl and hold down enter until R gets through all of the code the graphs should appear after about 10-20 seconds
-#Main reason for this delay is the for loop around line 100
+#The directory paths at lines 37, 51, 59, and 65 will need to be properly set before executing the code
+#In supportingFunctions.R the two filepaths leading to the all.csv file on line 69 will need to be properly set before executing the code
+#Once paths are set if you hold down ctrl and hold down enter until R gets through all of the code the graphs should appear after about 10-30 seconds
+#Main reason for this delay is the for loop around line 113 and the custom function on line 74 that creates one of the graphs
 
 
 #Answer to Question 1: Supported with graph produced by code towards bottom
@@ -29,19 +29,14 @@
 
 
 
-
-
 #clear previous contents
 rm(list=ls())
 
-#set working directory to the folder containing this file and the supportingFunctions.R file
-#setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
 
-
-#set working directory to the folder where allData.csv is contained
+#set working directory to the folder where all.csv is contained
 setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
 
-#load a package every time you wish to use it
+#load the packages used by the code
 
 source("supportingFunctions.R")
 library(ggplot2)
@@ -81,9 +76,6 @@ sumview("all.csv")
 
 
 
-
-
-
 #####For supporting answers to questions 1 and 2
 #custom function that converts the data in all.csv and creates a data frame for each graph used to support answers to the questions
 #data frames produces will be final_df_for_analysis and final_dt_for_bar_plot
@@ -97,10 +89,8 @@ data<-read.csv("all.csv")
 
 #now i can create a dataframe for Country X and Country Y with the applicable Titles and empty rows
 dfcx <- data.frame("Marker_01_X" = integer(), "Marker_02_X" = integer(), "Marker_03_X" = integer(), "Marker_04_X" = integer(), "Marker_05_X" = integer(), "Marker_06_X" = integer(), "Marker_07_X" = integer(), "Marker_08_X" = integer(), "Marker_09_X" = integer(), "Marker_10_X" = integer(), "Cumulative_Pos_X" = integer(), "DayofYear_X" = integer(), stringsAsFactors = FALSE)
-dfcx
 
 dfcy <- data.frame("Marker_01_Y" = integer(), "Marker_02_Y" = integer(), "Marker_03_Y" = integer(), "Marker_04_Y" = integer(), "Marker_05_Y" = integer(), "Marker_06_Y" = integer(), "Marker_07_Y" = integer(), "Marker_08_Y" = integer(), "Marker_09_Y" = integer(), "Marker_10_Y" = integer(), "Cumulative_Pos_Y" = integer(), "DayofYear_Y" = integer(), stringsAsFactors = FALSE)
-dfcy
 
 
 #Since I will not need gender or age columns to answer the following questions I can remove them. I can always append them back in later if needed for other statistical analysis.
@@ -111,7 +101,6 @@ dfcy
 
 data = data[,!grepl("age", names(data))]
 data = data[,!grepl("gender", names(data))]
-head(data)
 
 
 #now I will use loops to look through each row in "data"
@@ -140,7 +129,7 @@ for (j in 1:length(data$Country)){
   }
 }
 
-length(colnames(data))
+
 #Now that I have all the positive cases from country X and country Y in separate data frames, I can
 #Analyze the total number of markers and subjects that were listed for each day of the year
 #I will end up with one row for each day of the year, that will include the cumulative total up through that day for both the individual markers and the subjects
@@ -156,12 +145,10 @@ last_day = max(data$dayofYear)
 
 #create a vector that is the length of the range (this should match with the DayofYear column in dfcxcum and dfcycum)
 #since we are comparing x and y we will want both to have the same number of days, even if nobody tested positive on one of the days
-#days<-c(first_day:last_day)
-#days
-#so we know that for our analysis we will have a data frame that has a length of rows and length of columns based on the number of days of testing and the number of markers tested
+#The data frame will have a length of rows and length of columns based on the number of days of testing and the number of markers tested
 
 #To get the cumulative values for each column for each day I will first use the cumsum() function on each column and safe these newly created vectors with new vector names
-#Once I have created vectors of cumulated sums for each column in dfcx and dfcy I will combine them all together using cbind()
+#Once I have created vectors of accumulated sums for each column in dfcx and dfcy I will combine them all together using cbind()
 
 #First processing everything for country X:
 mar1cumx <- cumsum(dfcx$Marker_01_X)
@@ -184,8 +171,6 @@ day_of_yearx <- dfcx$DayofYear_X
 
 
 markercumulativex <- data.frame(cbind(mar1cumx,mar2cumx,mar3cumx,mar4cumx,mar5cumx,mar6cumx,mar7cumx,mar8cumx,mar9cumx,mar10cumx,subjcumx,day_of_yearx))
-head(markercumulativex)
-tail(markercumulativex)
 
 
 #Now processing everything for country Y:
@@ -209,8 +194,6 @@ day_of_yeary <- dfcy$DayofYear_Y
 
 
 markercumulativey <- data.frame(cbind(mar1cumy,mar2cumy,mar3cumy,mar4cumy,mar5cumy,mar6cumy,mar7cumy,mar8cumy,mar9cumy,mar10cumy,subjcumy,day_of_yeary))
-head(markercumulativey)
-tail(markercumulativey)
 
 
 #Now I need to obtain the last row for each day in the dataframe "markercumulativex" and "markercumulativey"
@@ -218,8 +201,6 @@ tail(markercumulativey)
 #"y_totals_by_day" will be the data frame for country y
 #I'll check each row and if day_of_yearx increments, I'll save the i-1 row to the new dataframe
 #If day_of_yearx increments by more than one I will need to print the i-1 row to the new dataframe
-
-
 
 x_totals_by_day <- data.frame("Marker_01_X" = integer(), "Marker_02_X" = integer(), "Marker_03_X" = integer(), "Marker_04_X" = integer(), "Marker_05_X" = integer(), "Marker_06_X" = integer(), "Marker_07_X" = integer(), "Marker_08_X" = integer(), "Marker_09_X" = integer(), "Marker_10_X" = integer(), "Cumulative_Pos_X" = integer(), "DayofYear_X" = integer(), stringsAsFactors = FALSE)
 #go from 120-175
@@ -315,12 +296,7 @@ for (i in 1:length(markercumulativey$day_of_year)){
   }
 }
 
-#If there is a gap in day_of_yearx somewhere from 120-175 I need to insert a row in using data from previous row so that there are no gaps in days and so both country x and country y have the same nubmer of rows
-head(x_totals_by_day)
-tail(x_totals_by_day)
-head(y_totals_by_day)
-tail(y_totals_by_day)
-
+#If there is a gap in day_of_yearx somewhere from 120-175 I need to insert a row in using data from previous row so that there are no gaps in days and so both country x and country y have the same number of rows
 #Cumulative positive cases for country X will be created next
 cum_total_x <- c(x_totals_by_day$Cumulative_Pos_X)
 
@@ -340,30 +316,36 @@ doy <- c(first_day:last_day)
 
 vector_x = rep.int("x", length(doy))
 vector_y = rep.int("y", length(doy))
-doy
-x_totals_by_day
+
+
 #Now I will append these vectors onto their respective countries using cbind
 
 x_totals_by_day <- cbind(x_totals_by_day,vector_x)
-head(x_totals_by_day)
+
 y_totals_by_day <- cbind(y_totals_by_day,vector_y)
-head(y_totals_by_day)
+
 
 #Now I will create a final data frame and place the country Y rows after the country X rows using rbind()
 #First I will have to rename the columns so they match
 
 colnames(x_totals_by_day) <- c("Marker_01","Marker_02","Marker_03","Marker_04","Marker_05","Marker_06","Marker_07","Marker_08","Marker_09","Marker_10","Cum_Pos","day_of_year","Country")
 
-head(x_totals_by_day)
 
 colnames(y_totals_by_day) <- c("Marker_01","Marker_02","Marker_03","Marker_04","Marker_05","Marker_06","Marker_07","Marker_08","Marker_09","Marker_10","Cum_Pos","day_of_year","Country")
 
-head(y_totals_by_day)
 
 final_df_for_analysis <- rbind(x_totals_by_day, y_totals_by_day)
-head(final_df_for_analysis)
+
 
 #Now I will create the graph to compare the cumulative number of positive cases for each country on each day of testing
+
+#Graph supporting answer to question 1 as stated above:
+ggplot(data = final_df_for_analysis,
+       aes(x = day_of_year, y = Cum_Pos, color = Country)) +
+  geom_point() +
+  xlab("Day of Year") +
+  ylab("Cumulative Positive") +
+  theme_classic()
 
 
 
@@ -418,14 +400,6 @@ colnames(newdty)[3] <- "Country"
 final_dt_for_bar_plot <- rbind(newdtx,newdty)
 
 
-
-#Graph supporting answer to question 1 as stated above:
-ggplot(data = final_df_for_analysis,
-       aes(x = day_of_year, y = Cum_Pos, color = Country)) +
-  geom_point() +
-  xlab("Day of Year") +
-  ylab("Cumulative Positive") +
-  theme_classic()
 
 
 #Now I will create the graph to support my answer for question 2
