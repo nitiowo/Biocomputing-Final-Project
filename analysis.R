@@ -25,4 +25,8 @@ all_data <- rbind(countryX, countryY)
 setwd("/Users/vivianyang/Documents/GitHub/Biocomputing-Final-Project")
 write.csv(all_data, "all_data.csv", row.names = FALSE)
 
-#
+#analyzing
+analysis("all_data.csv")
+
+# From our data, X is more likely to be the starting country.
+# The vaccine from Y will not be working for X since they shows different Markers.
