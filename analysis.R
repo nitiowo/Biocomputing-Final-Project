@@ -1,5 +1,6 @@
 source("supportingFunctions.R")
 
+# use functions from supportingFunctions.R to create and summarize the compiledData.csv
 fileConverter("c:/Users/evelasco/Documents/GitHub/Biocomputing-Final-Project/countryY")
 compiledCSV("c:/Users/evelasco/Documents/GitHub/Biocomputing-Final-Project")
 dataSummary("c:/Users/evelasco/Documents/GitHub/Biocomputing-Final-Project", "compiledData.csv")
