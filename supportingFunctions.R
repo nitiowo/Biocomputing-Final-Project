@@ -4,9 +4,12 @@
 #Script: supportingFunctions.R
 
 
-setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY")
+#setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY")
 #"C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project"
-file.remove(list.files(pattern = "*.csv"))
+#file.remove(list.files(pattern = "*.csv"))
+#setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project")
+
+
 
 #1ST REQUIREMENT
 #function that converts all files in a directory with space or tab delimited data into comma-separated value files
@@ -121,15 +124,67 @@ many2onecsv<-function(directory, NAdecision = "do_nothing"){
 #3RD REQUIREMENT
 #write a function to summarize the compiled data set in terms of number
 #screens run, percent of patients screened that were infected
-#percent of patients that identify as male and femal
+#percent of patients that identify as male and female
 #age distribution of patients (as a table or plot)
 
 
+#Using all.csv file to accomplish these tasks
 
 
+#need number of screens run
+#percent of patients screened that were infected
+#percent of patients that identify as male and female
+#age distribution of patients as table or plot
 
 
+#User will select the summarized data filename (all.csv), they will need to have their working directory set to the directory with this file
+sumview<-function(filename){
+  summary<-read.csv(filename)
+  head(summary)
+  tail(summary)
 
-
-
+  #Number of screens per run
+  total_screens = nrow(summary)
+  #create a variable for tracking number of positive cases
+  totalpos = 0
+  #code will loop through each row, but only columns that contain markers
+  #if one of the rows markers contains a 1 it will increment variable and move to the next row
+  #loop through all rows, if any contain a 1 count it and move to the next row
+  for(i in 1:nrow(summary)) {
+    for(j in (which(colnames(summary)=="marker01"):which(colnames(summary)=="marker10"))) {
+      if (summary[i,j] == 1){
+        totalpos <- (totalpos + 1)
+        break
+      }
+    }
+  }
+  #Percentage of infected patients
+  p_infected = 100*(totalpos/total_screens)
+  
+  #Percent of patients that identify as male
+  male <- sum(summary$gender == "male")
+  female <- sum(summary$gender == "female")
+  #male percent
+  malepercent = 100*(male/total_screens)
+  femalepercent = 100*(female/total_screens)
+  
+  summarydf <- data.frame(total_screens,p_infected,malepercent,femalepercent)
+  colnames(summarydf) <- c("Total Screenings", "Percent Infected", "Percent Male", "Percent Female")
+  
+  #age distribution of patients
+  #my_list <- list("Histogram" = )
+  
+  return(ggplot(summary, aes(x = age))
+         + geom_histogram(binwidth = 1) +
+         geom_text(aes(40, 2800, label=paste("Total Screens:", total_screens))) +
+           geom_text(aes(40, 2300, label=paste("% Infected:", p_infected))) +
+           geom_text(aes(40, 1800, label=paste("Total Screens - % Male:", malepercent))) +
+           geom_text(aes(40, 1300, label=paste("Total Screens - % Female:", femalepercent))) +
+           xlab("Age") +
+           ylab("# Patients") +
+           scale_x_continuous(breaks = round(seq(min(summary$age), max(summary$age), by = 5),5)) +
+           ggtitle("Summary of combined testing data") +
+         theme_classic())
+  
+}
 

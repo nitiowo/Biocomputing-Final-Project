@@ -1,5 +1,5 @@
 #James Magas and Kate Jackowski
-#2023-Dec-13
+#2023-Dec-14
 #Biocomputing Final Project
 #Script: analysis.R
 
@@ -48,28 +48,44 @@ library(ggplot2)
 library(cowplot)
 
 
+
 #Use the functions created in supportingFunctions.R to accomplish data transformation and compilation
 
-###Use custom function convertdirectorytocsv() to convert all .txt files in countryY directory to .csv files
+###From part 1: Use custom function convertdirectorytocsv() to convert all .txt files in countryY directory to .csv files
 #Usage: convertdirectorytocsv(directory_containing_country_.txt_files)
 convertdirectorytocsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY")
 
-##use custom function to compile all files in country X database
-#Usage: many2onecsv(directory_containing_country_.csv_files)
 
+
+###From part 2:
+##use custom function to compile all files in country X database
+#Usage: many2onecsv(directory_containing_country_.csv_files, option_on_how_to_handle_NA_values)
 #User can select "warn" or "remove" as option for how to deal with NAs in data. Default is "do_nothing"
-many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryX/","remove")
+many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryX/","do_nothing")
 
 #use custom function to compile all files in country Y database and append them to the compiled data created from country X database
 #This function can continued to be called, by replacing the directory name with whatever country has a directory of compiled .csv files
-#Usage: many2onecsv(directory_containing_country_.csv_files)
+#Usage: many2onecsv(directory_containing_country_.csv_files, option_on_how_to_handle_NA_values)
 #User can select "warn" or "remove" as option for how to deal with NAs in data. Default is "do_nothing"
-many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY/","remove")
+many2onecsv("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Biocomputing-Final-Project/countryY/","do_nothing")
+
+
+
+###From part 3:
+#Use a custom function to summarize compiled data in newly created all.csv file
+#After running part 2 above, user's current working directory should be directory containing all.csv file
+#The user will need to input the file name of the data they want to summarize and will need to be in the correct working directory
+#Usage: sumview(data_file_name_of_data_want_summary_for)
+sumview("all.csv")
 
 
 
 
-#####custom function that converts the data in all.csv and creates a data frame for each graph used to support answers to the questions
+
+
+
+#####For supporting answers to questions 1 and 2
+#custom function that converts the data in all.csv and creates a data frame for each graph used to support answers to the questions
 #data frames produces will be final_df_for_analysis and final_dt_for_bar_plot
 #new directory needs to be set before running
 #set wd to directory with the all.csv file
@@ -78,8 +94,6 @@ setwd("C:/Users/jwmag/OneDrive/Desktop/Intro_to_biocomputing/Final_Project/Bioco
 
 #load the combined data from all countries and name it "data"
 data<-read.csv("all.csv")
-head(data)
-tail(data)
 
 #now i can create a dataframe for Country X and Country Y with the applicable Titles and empty rows
 dfcx <- data.frame("Marker_01_X" = integer(), "Marker_02_X" = integer(), "Marker_03_X" = integer(), "Marker_04_X" = integer(), "Marker_05_X" = integer(), "Marker_06_X" = integer(), "Marker_07_X" = integer(), "Marker_08_X" = integer(), "Marker_09_X" = integer(), "Marker_10_X" = integer(), "Cumulative_Pos_X" = integer(), "DayofYear_X" = integer(), stringsAsFactors = FALSE)
@@ -350,8 +364,6 @@ final_df_for_analysis <- rbind(x_totals_by_day, y_totals_by_day)
 head(final_df_for_analysis)
 
 #Now I will create the graph to compare the cumulative number of positive cases for each country on each day of testing
-
-
 
 
 
