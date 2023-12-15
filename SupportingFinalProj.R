@@ -16,17 +16,19 @@ csvconvert<-function(directory,HeaderTF,delim){
   }
 }
 #2) Compile data
+#Usage: datacompile("/Users/daniel/Desktop/Biocomputing-Final-Project",c("countryX","countryY"),NAs=1)
+#NAs=1 means all rows containing any NAs will be removed
+#NAs=2 means all rows will be retained but if any NAs are present, a warning will display
+#NAs=3 means all rows will be retained regardless of whether or not NAs are present
 datacompile<-function(directory,listcountries,NAs){
   CompiledData<-data.frame(matrix(nrow=0,ncol=14))
-  setwd(directory)
   for (country in listcountries){
-    countrypath<-paste(c(directory,country),collapse="/")
-    setwd(countrypath)
-    for (screen in list.files(path=countrypath, pattern=".csv")){
-      date1<-strsplit(screen,"[.]")
+    for (screen in list.files(path=paste(c(directory,country),collapse="/"), pattern=".csv")){
+      path<-paste(c(directory,country,screen),collapse="/")
+      date1<-strsplit(path,"[.]")
       date2<-strsplit(date1[[1]][1],"_")
       date<-as.integer(date2[[1]][2])
-      data<-read.csv(screen,header=TRUE)
+      data<-read.csv(path,header=TRUE)
       number<-nrow(data)
       data$country<-country
       data$dayofYear<-date
@@ -41,6 +43,7 @@ datacompile<-function(directory,listcountries,NAs){
   write.csv(CompiledData,file="CompiledData.csv",row.names=FALSE,col.names=TRUE)
 }
 #3) Summarize Data
+#Usage:summarize("/Users/daniel/Desktop/Biocomputing-Final-Project/CompiledData.csv")
 summarize<-function(file){
   ToSummarize<-read.csv(file,header=TRUE)
   screens<-nrow(ToSummarize)

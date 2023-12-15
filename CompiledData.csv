@@ -1,6 +1,6 @@
 "gender","age","marker01","marker02","marker03","marker04","marker05","marker06","marker07","marker08","marker09","marker10","country","dayofYear"
 "female",8,0,0,0,0,0,0,0,0,0,0,"countryX",120
-"female",7,0,0,1,NA,0,0,0,0,0,0,"countryX",120
+"female",7,0,0,1,0,0,0,0,0,0,0,"countryX",120
 "female",6,0,0,0,0,0,0,0,0,0,0,"countryX",120
 "female",5,0,0,0,0,0,0,0,0,0,0,"countryX",120
 "female",15,0,0,0,0,0,0,0,0,0,0,"countryX",120
